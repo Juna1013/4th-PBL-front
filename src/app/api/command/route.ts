@@ -25,16 +25,16 @@ export async function POST(request: NextRequest) {
         const { command, source  = 'chat' } = body;
 
         // バリデーション
-        if (!command || !VALID_COMMANDS.includes(command.tiUpperCase())) {
+        if (!command || !VALID_COMMANDS.includes(command.toUpperCase())) {
             return NextResponse.json({
-                seccess: false,
+                success: false,
                 error: 'Invalid command. Valid commands: ' + VALID_COMMANDS.join(', ')
             }, { status: 400 });
         }
 
         // コマンドを更新
         currentCommand = {
-            command: command.tiUpperCase() as CommandType,
+            command: command.toUpperCase() as CommandType,
             timestamp: Date.now(),
             source: source as 'voice' | 'chat'
         };
