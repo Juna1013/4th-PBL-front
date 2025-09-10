@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { CommandType, VALID_COMMANDS } from '@/types';
 import { getCommandDescription } from '@/lib/gemini';
 
@@ -11,6 +12,7 @@ interface ManualControlProps {
 export default function ManualControl({ onCommandSent }: ManualControlProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [lastCommand, setLastCommand] = useState<CommandType | null>(null);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const sendCommand = async (command: CommandType) => {
     setIsLoading(true);
@@ -36,14 +38,14 @@ export default function ManualControl({ onCommandSent }: ManualControlProps) {
   };
 
   const getButtonStyle = (command: CommandType) => {
-    const baseStyle = "p-4 rounded-xl font-semibold text-white transition-all transform hover:scale-105 disabled:opacity-50 disabled:transform-none shadow-lg hover:shadow-xl backdrop-blur-sm";
+    const baseStyle = "p-4 rounded-xl font-semibold text-gray-900 dark:text-white transition-all transform hover:scale-105 disabled:opacity-50 disabled:transform-none shadow-lg hover:shadow-xl backdrop-blur-sm";
     
     const colors = {
-      'STOP': 'bg-gradient-to-br from-red-600 to-red-700 hover:from-red-700 hover:to-red-800',
-      'GO': 'bg-gradient-to-br from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800',
-      'FORWARD': 'bg-gradient-to-br from-cyan-600 to-blue-700 hover:from-cyan-700 hover:to-blue-800',
-      'LEFT': 'bg-gradient-to-br from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700',
-      'RIGHT': 'bg-gradient-to-br from-violet-600 to-purple-700 hover:from-violet-700 hover:to-purple-800'
+      'STOP': 'bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-800/40 border border-red-300 dark:border-red-700',
+      'GO': 'bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-800/40 border border-green-300 dark:border-green-700',
+      'FORWARD': 'bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 border border-blue-300 dark:border-blue-700',
+      'LEFT': 'bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-800/40 border border-purple-300 dark:border-purple-700',
+      'RIGHT': 'bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-800/40 border border-purple-300 dark:border-purple-700'
     };
 
     return `${baseStyle} ${colors[command]}`;
@@ -61,19 +63,33 @@ export default function ManualControl({ onCommandSent }: ManualControlProps) {
   };
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-xl p-6">
-      <h2 className="text-xl font-bold text-white mb-4">
-        🎆 手動制御
-      </h2>
+    <div className="bg-white/80 dark:bg-gray-900/50 backdrop-blur-sm border border-gray-200 dark:border-gray-800 rounded-xl shadow-xl p-6">
+      <div 
+        className="flex items-center justify-between mb-4 cursor-pointer"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      >
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+          🎆 手動制御
+        </h2>
+        <button className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+          {isCollapsed ? (
+            <ChevronDown className="w-5 h-5" />
+          ) : (
+            <ChevronUp className="w-5 h-5" />
+          )}
+        </button>
+      </div>
 
-      {/* 最後のコマンド表示 */}
-      {lastCommand && (
-        <div className="mb-4 p-3 bg-emerald-900/30 border border-emerald-700/50 rounded-lg backdrop-blur-sm">
-          <div className="text-sm text-emerald-400">
-            ✅ コマンド送信完了: {lastCommand}
-          </div>
-        </div>
-      )}
+      {!isCollapsed && (
+        <>
+          {/* 最後のコマンド表示 */}
+          {lastCommand && (
+            <div className="mb-4 p-3 bg-green-50/50 dark:bg-green-800/30 border border-green-200 dark:border-green-700 rounded-lg backdrop-blur-sm">
+              <div className="text-sm text-green-700 dark:text-green-300">
+                ✅ コマンド送信完了: {lastCommand}
+              </div>
+            </div>
+          )}
 
       {/* コマンドボタン */}
       <div className="grid grid-cols-2 gap-4">
@@ -101,14 +117,14 @@ export default function ManualControl({ onCommandSent }: ManualControlProps) {
 
       {/* 方向キー風のレイアウトバージョン */}
       <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-4 text-white">方向キー制御</h3>
+        <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">方向キー制御</h3>
         <div className="grid grid-cols-3 gap-2 max-w-48 mx-auto">
           {/* 上段 */}
           <div></div>
           <button
             onClick={() => sendCommand('FORWARD')}
             disabled={isLoading}
-            className="bg-gradient-to-br from-cyan-600 to-blue-700 hover:from-cyan-700 hover:to-blue-800 text-white p-3 rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl transform hover:scale-105"
+            className="bg-blue-100 hover:bg-blue-200 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 border border-blue-300 dark:border-blue-700 text-gray-900 dark:text-white p-3 rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl transform hover:scale-105"
           >
             ⬆️
           </button>
@@ -118,21 +134,21 @@ export default function ManualControl({ onCommandSent }: ManualControlProps) {
           <button
             onClick={() => sendCommand('LEFT')}
             disabled={isLoading}
-            className="bg-gradient-to-br from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white p-3 rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl transform hover:scale-105"
+            className="bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-800/40 border border-purple-300 dark:border-purple-700 text-gray-900 dark:text-white p-3 rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl transform hover:scale-105"
           >
             ⬅️
           </button>
           <button
             onClick={() => sendCommand('STOP')}
             disabled={isLoading}
-            className="bg-gradient-to-br from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white p-3 rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl transform hover:scale-105"
+            className="bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-800/40 border border-red-300 dark:border-red-700 text-gray-900 dark:text-white p-3 rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl transform hover:scale-105"
           >
             ⏹️
           </button>
           <button
             onClick={() => sendCommand('RIGHT')}
             disabled={isLoading}
-            className="bg-gradient-to-br from-violet-600 to-purple-700 hover:from-violet-700 hover:to-purple-800 text-white p-3 rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl transform hover:scale-105"
+            className="bg-purple-100 hover:bg-purple-200 dark:bg-purple-900/30 dark:hover:bg-purple-800/40 border border-purple-300 dark:border-purple-700 text-gray-900 dark:text-white p-3 rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl transform hover:scale-105"
           >
             ➡️
           </button>
@@ -142,13 +158,15 @@ export default function ManualControl({ onCommandSent }: ManualControlProps) {
           <button
             onClick={() => sendCommand('GO')}
             disabled={isLoading}
-            className="bg-gradient-to-br from-emerald-600 to-green-700 hover:from-emerald-700 hover:to-green-800 text-white p-3 rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl transform hover:scale-105"
+            className="bg-green-100 hover:bg-green-200 dark:bg-green-900/30 dark:hover:bg-green-800/40 border border-green-300 dark:border-green-700 text-gray-900 dark:text-white p-3 rounded-xl font-semibold shadow-lg transition-all hover:shadow-xl transform hover:scale-105"
           >
             ▶️
           </button>
           <div></div>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }
