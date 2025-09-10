@@ -22,7 +22,15 @@ export default function SystemStatus() {
     const checkSystemStatus = async () => {
       try {
         // Gemini API の状態をチェック（簡易版）
-        const geminiStatus = process.env.NEXT_PUBLIC_GEMINI_API_KEY ? 'connected' : 'disconnected';
+        // クライアントサイドでは実際のAPIキーは確認できないため、
+        // 実際のAPI呼び出しで接続性をテスト
+        let geminiStatus: 'connected' | 'disconnected' = 'disconnected';
+        try {
+          const testResponse = await fetch('/api/test/gemini');
+          geminiStatus = testResponse.ok ? 'connected' : 'disconnected';
+        } catch {
+          geminiStatus = 'disconnected';
+        }
         
         // TODO: 実際のPico WとColabの状態もチェック
         setStatus({

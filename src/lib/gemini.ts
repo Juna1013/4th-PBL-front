@@ -3,45 +3,39 @@ import { CommandType, VALID_COMMANDS } from '@/types';
 import { Forward } from 'lucide-react';
 
 // Gemini AI クライアントの初期化
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+// クライアントサイドでは環境変数にアクセスできないため、
+// API経由でコマンド処理を行う
+const genAI = null; // クライアントサイドでは常にnull
 
 // ユーザーのテキスト入力からライントレースカーのコマンドを抽出
 export async function extractCommandFromText(userInput: string): Promise<CommandType> {
     try {
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
+        // APIエンドポイント経由でコマンド抽出を実行
+        const response = await fetch('/api/extract-command', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userInput })
+        });
 
-        const prompt = `
-            あなたはライントレースカーの制御システムです。
-            以下のユーザー入力から、最も適切な制御コマンドを1つ抽出してください。
-
-            利用可能なコマンド:
-            - LEFT:左に曲がる
-            - RIGHT:右に曲がる
-            - FORWARD:前進する
-            - STOP:停止する
-            - GO:開始/進行する
-
-            ユーザー入力: "${userInput}"
-
-            ルール:
-            1. コマンド名のみを返してください（説明不要）
-            2. 必ず上記5つのコマンドのいずれかを返してください
-            3. 判断できない場合は "STOP" を返してください
-
-            抽出したコマンド:`;
-
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const extractedCommand = response.text().trim().toUpperCase() as CommandType;
-
-        // 有効なコマンドかチェック
-        if (VALID_COMMANDS.includes(extractedCommand)) {
-            return extractedCommand;
-        } else {
-            console.warn(`Invalid command extracted: ${extractedCommand}, defaulting to STOP`);
-            return 'STOP';
+        if (response.ok) {
+            const result = await response.json();
+            if (result.success) {
+                return result.command as CommandType;
+            }
         }
+
+        throw new Error('API call failed');
     } catch (error) {
+        console.error('Command extraction error:', error);
+        
+        // APIエラー時は簡易的なルールベース処理でフォールバック
+        const input = userInput.toLowerCase();
+        if (input.includes('左') || input.includes('ひだり')) return 'LEFT';
+        if (input.includes('右') || input.includes('みぎ')) return 'RIGHT';
+        if (input.includes('前') || input.includes('進') || input.includes('まえ')) return 'FORWARD';
+        if (input.includes('開始') || input.includes('スタート') || input.includes('go')) return 'GO';
+        if (input.includes('停止') || input.includes('止') || input.includes('ストップ') || input.includes('stop')) return 'STOP';
+        
         // エラー時はSTOPコマンドを返す
         return 'STOP';
     }
