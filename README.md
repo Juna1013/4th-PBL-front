@@ -39,6 +39,7 @@
 ## 🛠️ 技術スタック
 
 ### フロントエンド
+
 - **Framework**: Next.js 15.5.2 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
@@ -46,11 +47,13 @@
 - **State Management**: React Hooks
 
 ### バックエンド
+
 - **API**: Next.js API Routes
 - **AI**: Google Gemini API
 - **Hardware**: Raspberry Pi Pico W
 
 ### 開発ツール
+
 - **Package Manager**: npm
 - **Linting**: ESLint
 - **Formatting**: Prettier
@@ -67,23 +70,27 @@
 ### インストール手順
 
 1. **リポジトリのクローン**
+
    ```bash
    git clone https://github.com/juna1013/4th-PBL-front.git
    cd 4th-PBL-front
    ```
 
 2. **依存関係のインストール**
+
    ```bash
    npm install
    ```
 
 3. **環境変数の設定**
+
    ```bash
    cp .env.example .env.local
    # .env.localを編集して必要なAPIキーを設定
    ```
 
 4. **開発サーバーの起動**
+
    ```bash
    npm run dev
    ```
@@ -109,16 +116,19 @@ NEXT_PUBLIC_APP_VERSION="1.0.0"
 ## 🎯 使用方法
 
 ### 1. チャット制御
+
 1. ダッシュボードにアクセス
 2. チャット入力欄に自然言語でコマンドを入力
    - 例: 「左に曲がって」「前進して」「停止して」
 3. AIが自動でコマンドに変換・実行
 
 ### 2. 手動制御  
+
 1. 手動制御パネルのボタンをクリック
 2. 方向キー風のレイアウトで直感的操作
 
 ### 3. 音声制御
+
 1. Raspberry Pi Pico Wをセットアップ
 2. 音声でコマンドを発話
 3. CNNによる音声認識でコマンド実行
@@ -189,11 +199,3 @@ npm run type-check
 
 - **開発者**: [juna1013](https://github.com/juna1013)
 - **プロジェクト**: 4th PBL (Project Based Learning)
-
----
-
-<div align="center">
-
-**Made with ❤️ for robotics and AI**
-
-</div>
