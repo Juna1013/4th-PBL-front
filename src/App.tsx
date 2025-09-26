@@ -1,7 +1,7 @@
 import React from 'react';
 import { Car, Github, ExternalLink } from 'lucide-react';
 import { CommandDisplay } from './components/CommandDisplay';
-import { TestControls } from './components/TestControls';
+import { TestControls } from './components/TestControl';
 import { LogsList } from './components/LogsList';
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
             </div>
             
             <div className="flex items-center space-x-3">
-              
+              <a
                 href={import.meta.env.VITE_API_URL?.replace('/api', '/docs') || 'http://localhost:8000/docs'}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -35,7 +35,8 @@ function App() {
                 <ExternalLink className="w-4 h-4" />
                 API Docs
               </a>
-              
+
+              <a
                 href="https://github.com/your-username/line-tracer-control"
                 target="_blank"
                 rel="noopener noreferrer"
