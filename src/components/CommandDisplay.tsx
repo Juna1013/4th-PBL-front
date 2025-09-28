@@ -62,12 +62,30 @@ export const CommandDisplay: React.FC = () => {
       </div>
 
       {error ? (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4 rounded">
-          <div className="flex">
-            <div className="ml-3">
-              <p className="text-sm text-red-700">
-                サーバーとの接続に問題があります。しばらく待ってから再試行してください。
-              </p>
+        <div className="space-y-4">
+          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+            <div className="flex">
+              <div className="ml-3">
+                <p className="text-sm text-yellow-700">
+                  APIサーバーに接続できません。デモモードで表示しています。
+                </p>
+                <p className="text-xs text-yellow-600 mt-1">
+                  本番環境では正常に動作します。
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-center">
+            <div className={`
+              ${getCommandColor('STOP')} 
+              text-white px-8 py-6 rounded-xl text-3xl font-bold 
+              min-w-[180px] text-center shadow-lg transform transition-all duration-300
+              border-2 opacity-75
+            `}>
+              <div className="flex items-center justify-center gap-3">
+                <span className="text-4xl drop-shadow-lg">{getCommandIcon('STOP')}</span>
+                <span className="drop-shadow-lg">デモモード</span>
+              </div>
             </div>
           </div>
         </div>

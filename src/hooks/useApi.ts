@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiService, LogEntry, CommandResponse, StatsResponse } from '../services/api';
+import { apiService, type LogEntry, type CommandResponse, type StatsResponse } from '../services/api';
 
 export const useCommand = () => {
   return useQuery<CommandResponse>({
@@ -7,6 +7,8 @@ export const useCommand = () => {
     queryFn: apiService.getCommand,
     refetchInterval: 1000, // 1秒ごとに更新
     staleTime: 500,
+    retry: 1, // リトライ回数を制限
+    retryDelay: 1000,
   });
 };
 
@@ -16,6 +18,8 @@ export const useLogs = (limit: number = 20) => {
     queryFn: () => apiService.getLogs(limit),
     refetchInterval: 2000, // 2秒ごとに更新
     staleTime: 1000,
+    retry: 1, // リトライ回数を制限
+    retryDelay: 1000,
   });
 };
 
@@ -25,6 +29,8 @@ export const useStats = () => {
     queryFn: apiService.getStats,
     refetchInterval: 5000, // 5秒ごとに更新
     staleTime: 2000,
+    retry: 1, // リトライ回数を制限
+    retryDelay: 1000,
   });
 };
 

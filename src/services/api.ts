@@ -48,7 +48,7 @@ export interface StatsResponse {
 }
 
 // API サービス
-export const apiService = {
+const apiService = {
   // 最新コマンドを取得
   async getCommand(): Promise<CommandResponse> {
     const response = await apiClient.get<CommandResponse>('/command');
@@ -92,3 +92,5 @@ export const apiService = {
     return response.data;
   }
 };
+
+export { apiService };
