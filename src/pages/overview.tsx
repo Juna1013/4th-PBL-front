@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Car, Github, ExternalLink, AlertTriangle, ArrowLeft, Home } from 'lucide-react';
+import { Car, Github, ExternalLink, AlertTriangle } from 'lucide-react';
 import { useHealthCheck } from '../hooks/useApi';
 
 export default function OverviewPage() {

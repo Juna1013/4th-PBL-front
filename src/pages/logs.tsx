@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Car, Github, ExternalLink, AlertTriangle, Home } from 'lucide-react';
+import { Car, Github, ExternalLink, AlertTriangle } from 'lucide-react';
 import { LogsList } from '../components/LogsList';
 import { useHealthCheck } from '../hooks/useApi';
 
