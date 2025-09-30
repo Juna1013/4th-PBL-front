@@ -1,73 +1,141 @@
-# React + TypeScript + Vite
+# Line Tracer Control System - Next.js Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**ライントレースカー制御システム** のフロントエンドアプリケーションです。
 
-Currently, two official plugins are available:
+## 📋 概要
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+FastAPI + React + Next.js による音声認識制御システムのWebインターフェースです。
 
-## React Compiler
+### 機能
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🎤 **音声認識制御**: Google Colab の FastAPI が音声を処理
+- 🌐 **リアルタイム API 通信**: Render でホストされた API サーバーとの通信
+- 🚗 **Pico W 制御**: 最新コマンドを取得してライントレースカーを制御
+- 📊 **統計表示**: コマンド履歴とシステム統計の表示
 
-## Expanding the ESLint configuration
+## 🚀 セットアップ
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 必要な環境
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 18.0以上
+- npm または yarn
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### インストール
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 開発サーバー起動
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+アプリケーションは [http://localhost:5173](http://localhost:5173) で起動します。
+
+### ビルド
+
+```bash
+npm run build
+```
+
+### 本番サーバー起動
+
+```bash
+npm start
+```
+
+## 🛠 技術スタック
+
+- **Next.js 15** (Pages Router): React フレームワーク
+- **TypeScript**: 型安全なJavaScript
+- **TailwindCSS 3.4**: ユーティリティファーストCSS フレームワーク
+- **React Query**: サーバー状態管理
+- **Axios**: HTTP クライアント
+- **Lucide React**: アイコンライブラリ
+- **PostCSS**: CSS後処理ツール
+
+## 📁 プロジェクト構造
+
+```
+web/
+├── src/                       # すべてのソースコード
+│   ├── pages/                 # Next.js Pages Router
+│   │   ├── _app.tsx          # アプリケーションルート
+│   │   ├── _document.tsx     # HTMLドキュメント設定
+│   │   └── index.tsx         # ホームページ
+│   ├── components/           # Reactコンポーネント
+│   │   ├── CommandDisplay.tsx # コマンド表示
+│   │   ├── TestControl.tsx   # テストコントロール
+│   │   └── LogsList.tsx      # ログ一覧
+│   ├── hooks/                # カスタムフック
+│   │   └── useApi.ts         # API関連フック
+│   ├── services/             # API サービス
+│   │   └── api.ts            # API クライアント
+│   ├── styles/               # スタイルファイル
+│   │   └── globals.css       # グローバルスタイル
+│   └── providers.tsx         # React Query プロバイダー
+├── public/                   # 静的ファイル
+├── migration-backup/         # Viteマイグレーション用バックアップ
+├── package.json              # プロジェクト設定
+├── next.config.js            # Next.js設定
+└── tsconfig.json             # TypeScript設定
+```
+
+## 🌍 環境変数
+
+### 開発環境 (`.env.development`)
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000/api
+```
+
+### 本番環境 (`.env.production`)
+```env
+NEXT_PUBLIC_API_URL=https://your-render-app.onrender.com/api
+```
+
+## 📝 API エンドポイント
+
+| エンドポイント | 説明 |
+|----------------|------|
+| `GET /health` | ヘルスチェック |
+| `GET /command` | 最新コマンド取得 |
+| `GET /logs` | コマンド履歴取得 |
+| `GET /stats` | システム統計取得 |
+| `POST /command` | テストコマンド送信 |
+
+## 🔧 開発コマンド
+
+```bash
+# 開発サーバー起動
+npm run dev
+
+# プロダクションビルド
+npm run build
+
+# 本番サーバー起動 
+npm start
+
+# リンター実行
+npm run lint
+```
+
+## 📱 レスポンシブ対応
+
+- デスクトップ、タブレット、モバイルに対応
+- モダンブラウザサポート (Chrome, Firefox, Safari, Edge)
+
+## 🔄 Vite → Next.js マイグレーション履歴
+
+2025年1月: Viteプロジェクトから Next.js へマイグレーション完了
+
+### 主な変更点
+- Vite → Next.js Pages Router へ移行
+- `import.meta.env` → `process.env.NEXT_PUBLIC_*` へ更新
+- ESLint設定を Next.js用に更新
+- TypeScript設定を Next.js用に最適化
+- appディレクトリとsrcディレクトリをsrcに統一
+- Pages Router構造へ再編成 (_app.tsx, _document.tsx, index.tsx)
+- CSS ファイルを統合・整理（App.css, globals.css, index.css → styles/globals.css）
+- **TailwindCSS 3.4** を導入してモダンなUI設計を実現
