@@ -1,7 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Car, Github, ExternalLink, AlertTriangle, Info, Activity, List } from 'lucide-react';
+import { Car, Github, ExternalLink, AlertTriangle, Info, Activity, List, Volume2 } from 'lucide-react';
 import { useHealthCheck } from '../hooks/useApi';
 
 export default function HomePage() {
@@ -84,7 +84,24 @@ export default function HomePage() {
             </div>
 
             {/* ナビゲーションタイル */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+              {/* 音声認識制御ページへのリンク */}
+              <Link href="/speech" className="group">
+                <div className="bg-white/50 backdrop-blur-md rounded-3xl shadow-2xl p-8 border border-white/30 relative overflow-hidden transition-all duration-300 hover:shadow-3xl hover:-translate-y-2 hover:scale-105">
+                  <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-red-400/15 to-transparent rounded-full -ml-16 -mt-16"></div>
+
+                  <div className="relative z-10 text-center">
+                    <div className="p-6 bg-gradient-to-r from-red-500 to-red-600 rounded-3xl shadow-xl mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500 mx-auto w-fit">
+                      <Volume2 className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-slate-800 mb-3">音声認識制御</h3>
+                    <p className="text-slate-600 text-sm leading-relaxed">
+                      音声コマンドでライントレースカーを直接制御
+                    </p>
+                  </div>
+                </div>
+              </Link>
+
               {/* システム概要ページへのリンク */}
               <Link href="/overview" className="group">
                 <div className="bg-white/50 backdrop-blur-md rounded-3xl shadow-2xl p-8 border border-white/30 relative overflow-hidden transition-all duration-300 hover:shadow-3xl hover:-translate-y-2 hover:scale-105">

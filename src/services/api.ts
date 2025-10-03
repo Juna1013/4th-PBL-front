@@ -47,6 +47,53 @@ export interface StatsResponse {
   last_update: string | null;
 }
 
+// 音声認識関連のタイプ定義
+export interface SpeechPrediction {
+  command: string;
+  confidence: number;
+  percentage: string;
+}
+
+export interface SpeechPredictionResponse {
+  success: boolean;
+  predicted_command?: string;
+  confidence?: number;
+  confidence_percentage?: string;
+  is_confident?: boolean;
+  threshold_used?: number;
+  all_predictions?: SpeechPrediction[];
+  auto_executed?: boolean;
+  message?: string;
+  error?: string;
+  timestamp: string;
+}
+
+export interface ModelInfoResponse {
+  success: boolean;
+  model_info?: {
+    status: string;
+    model_path: string;
+    input_shape: string;
+    output_shape: string;
+    commands: string[];
+    sample_rate: number;
+    audio_length: number;
+  };
+  error?: string;
+  timestamp: string;
+}
+
+export interface SupportedCommandsResponse {
+  success: boolean;
+  commands_info?: {
+    supported_commands: string[];
+    command_mapping: Record<string, string>;
+    usage_notes: string[];
+  };
+  error?: string;
+  timestamp: string;
+}
+
 // API サービス
 const apiService = {
   // 最新コマンドを取得
@@ -90,6 +137,60 @@ const apiService = {
   async healthCheck(): Promise<{ status: string }> {
     const response = await apiClient.get('/health');
     return response.data;
+  },
+
+  // 音声認識関連のAPI
+  speech: {
+    // 音声ファイルから音声認識を実行
+    async predict(
+      audioFile: File,
+      options: {
+        confidenceThreshold?: number;
+        autoExecute?: boolean;
+      } = {}
+    ): Promise<SpeechPredictionResponse> {
+      const formData = new FormData();
+      formData.append('audio_file', audioFile);
+      
+      if (options.confidenceThreshold !== undefined) {
+        formData.append('confidence_threshold', options.confidenceThreshold.toString());
+      }
+      
+      if (options.autoExecute !== undefined) {
+        formData.append('auto_execute', options.autoExecute.toString());
+      }
+
+      const response = await axios.post<SpeechPredictionResponse>(
+        `${API_BASE_URL}/speech/predict`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          timeout: 30000, // 音声処理のため長めのタイムアウト
+        }
+      );
+      
+      return response.data;
+    },
+
+    // モデル情報を取得
+    async getModelInfo(): Promise<ModelInfoResponse> {
+      const response = await apiClient.get<ModelInfoResponse>('/speech/model/info');
+      return response.data;
+    },
+
+    // サポートされているコマンド一覧を取得
+    async getSupportedCommands(): Promise<SupportedCommandsResponse> {
+      const response = await apiClient.get<SupportedCommandsResponse>('/speech/commands');
+      return response.data;
+    },
+
+    // 音声認識機能のテスト
+    async test(): Promise<any> {
+      const response = await apiClient.post('/speech/test');
+      return response.data;
+    }
   }
 };
 
