@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Mic, MicOff, Play, Square, RotateCcw, Send, Volume2, AlertCircle, CheckCircle, Info } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Mic, Square, RotateCcw, Send, Volume2, AlertCircle, CheckCircle, Info } from 'lucide-react';
 import { useAudioRecording, useSpeechRecognition, convertBlobToFile, isValidAudioDuration } from '../hooks/useSpeechRecognition';
-import { SpeechPrediction } from '../services/api';
 
 interface SpeechRecognitionProps {
   onCommandSent?: (command: string) => void;
@@ -32,19 +31,11 @@ const SpeechRecognition: React.FC<SpeechRecognitionProps> = ({
     isPredicting,
     predictionResult,
     predictionError,
-    resetPrediction,
     supportedCommands,
   } = useSpeechRecognition();
 
-  // 録音完了時に自動で音声認識を実行
-  useEffect(() => {
-    if (recordingState === 'completed' && audioBlob && autoExecute) {
-      handlePredict();
-    }
-  }, [recordingState, audioBlob, autoExecute]);
-
   // 音声認識実行
-  const handlePredict = async () => {
+  const handlePredict = useCallback(async () => {
     if (!audioBlob) return;
 
     try {
@@ -60,7 +51,14 @@ const SpeechRecognition: React.FC<SpeechRecognitionProps> = ({
     } catch (error) {
       console.error('音声認識エラー:', error);
     }
-  };
+  }, [audioBlob, predictSpeech, confidenceThreshold, onCommandSent]);
+
+  // 録音完了時に自動で音声認識を実行
+  useEffect(() => {
+    if (recordingState === 'completed' && audioBlob && autoExecute) {
+      handlePredict();
+    }
+  }, [recordingState, audioBlob, autoExecute, handlePredict]);
 
   // 録音時間の表示フォーマット
   const formatDuration = (seconds: number): string => {

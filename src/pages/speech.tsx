@@ -8,7 +8,7 @@ import { CommandDisplay } from '../components/CommandDisplay';
 
 export default function SpeechPage() {
   const [lastSentCommand, setLastSentCommand] = useState<string | null>(null);
-  const { data: currentCommand, refetch: refetchCommand } = useCommand();
+  const { refetch: refetchCommand } = useCommand();
 
   const handleCommandSent = async (command: string) => {
     setLastSentCommand(command);
@@ -138,10 +138,7 @@ export default function SpeechPage() {
               {/* 現在のコマンド */}
               <div className="bg-white rounded-lg shadow-lg p-6">
                 <h3 className="text-lg font-bold text-gray-800 mb-4">現在のコマンド</h3>
-                <CommandDisplay 
-                  command={currentCommand?.command || null}
-                  timestamp={currentCommand?.timestamp}
-                />
+                <CommandDisplay />
               </div>
 
               {/* 最後に送信したコマンド */}

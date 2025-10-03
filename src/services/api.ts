@@ -187,7 +187,7 @@ const apiService = {
     },
 
     // 音声認識機能のテスト
-    async test(): Promise<any> {
+    async test(): Promise<{ success: boolean; test_result?: Record<string, unknown>; error?: string }> {
       const response = await apiClient.post('/speech/test');
       return response.data;
     }

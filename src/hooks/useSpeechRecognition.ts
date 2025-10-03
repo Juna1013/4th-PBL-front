@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { apiService, SpeechPredictionResponse, ModelInfoResponse, SupportedCommandsResponse } from '../services/api';
+import { apiService } from '../services/api';
 
 // 音声録音の状態
 export type RecordingState = 'idle' | 'recording' | 'processing' | 'completed' | 'error';
@@ -198,7 +198,7 @@ export async function checkMicrophonePermission(): Promise<boolean> {
   try {
     const permissionStatus = await navigator.permissions.query({ name: 'microphone' as PermissionName });
     return permissionStatus.state === 'granted';
-  } catch (error) {
+  } catch {
     // permissions APIが利用できない場合は、実際にアクセスを試行
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
