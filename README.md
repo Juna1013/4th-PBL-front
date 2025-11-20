@@ -1,36 +1,175 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎤 音声認識ダッシュボード
 
-## Getting Started
+Raspberry Pi Pico W の音声認識システムを可視化するWebダッシュボードです。
 
-First, run the development server:
+## 📋 機能
+
+- **サーバー接続状態の監視** - リアルタイムでサーバーの接続状態を表示
+- **音声認識結果の表示** - 認識されたコマンドと信頼度をリアルタイムで表示
+- **マイク入力** - ブラウザのマイクから直接音声入力が可能
+- **ファイルアップロード** - 音声ファイル（WAV, MP3等）をアップロードして認識
+- **テストコマンド** - 6つのサポートコマンドをテスト実行
+- **認識履歴** - 過去10件の認識結果を表示
+- **オーディオレベル表示** - リアルタイムの音声入力レベルを可視化
+
+## 🚀 クイックスタート
+
+### 必要な環境
+
+- Node.js 18以上
+- npm/yarn/pnpm
+
+### インストール
+
+```bash
+# 依存関係のインストール
+npm install
+```
+
+### 開発サーバーの起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+開発サーバーが起動したら、ブラウザで [http://localhost:3000](http://localhost:3000) にアクセスしてください。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### ビルド
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## 🔌 サーバー連携
 
-To learn more about Next.js, take a look at the following resources:
+このダッシュボードは `server` ディレクトリのFastAPIサーバーと連携します。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### サーバーの起動
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cd ../server
+python main.py
+# または
+uvicorn src.main:app --host 0.0.0.0 --port 8000
+```
 
-## Deploy on Vercel
+### APIエンドポイント
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `GET /health` - サーバーのヘルスチェック
+- `POST /recognize` - 音声認識（ファイルアップロード時に使用）
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎯 サポートコマンド
+
+- 🔵 **前進** - 前方へ移動
+- 🟡 **後退** - 後方へ移動
+- 🔴 **左折** - 左に曲がる
+- 🟢 **右折** - 右に曲がる
+- ⚫ **停止** - 運動停止
+- 🟣 **スタート** - システム開始
+
+## 🛠️ 技術スタック
+
+- **フレームワーク**: Next.js 16
+- **UI**: React 19
+- **スタイリング**: Tailwind CSS 4
+- **言語**: TypeScript 5
+- **音声API**: Web Audio API
+
+## 📁 プロジェクト構成
+
+```
+web/
+├── app/
+│   ├── layout.tsx         # ルートレイアウト
+│   ├── page.tsx           # ダッシュボードメインコンポーネント
+│   └── globals.css        # グローバルスタイル
+├── public/                # 静的ファイル
+├── package.json
+├── tsconfig.json
+├── next.config.ts
+├── tailwind.config.ts
+└── README.md
+```
+
+## 🎨 ダッシュボード構成
+
+### ヘッダー
+プロジェクトタイトルと概要
+
+### ステータスバー
+- サーバー接続状態（接続中/未接続）
+- 最新の認識結果とその信頼度
+
+### メインディスプレイ
+- 大きく認識されたコマンドを表示
+- 信頼度のプログレスバー
+- 入力待機時のメッセージ
+
+### オーディオレベル表示
+- マイク入力時のリアルタイム音量レベル
+- 100段階のスケール表示
+
+### コントロールパネル
+- **マイク入力**: リアルタイムマイク入力の開始/停止
+- **ファイルアップロード**: 音声ファイルのアップロード
+- **テストコマンド**: 6つのコマンドボタンでテスト実行
+
+### 認識履歴
+- 過去10件の認識結果
+- 各結果のタイムスタンプと信頼度
+
+## 🔐 セキュリティ考慮事項
+
+- CORS対応により、localhostからのリクエストのみ許可
+- 本番環境ではサーバー側でCORS設定を制限してください
+
+## 🐛 トラブルシューティング
+
+### "サーバーに接続できません"
+- サーバーが起動しているか確認
+- ポート8000が使用中でないか確認
+- ファイアウォール設定を確認
+
+### マイクへのアクセスが拒否される
+- ブラウザのマイクアクセス許可を確認
+- HTTPSを使用していない場合、localhostのみでマイクアクセスが可能
+
+### 音声ファイルがアップロードできない
+- WAV、MP3など一般的な音声フォーマットを使用してください
+- サーバー側の最大アップロードサイズを確認
+
+## 📖 詳細ドキュメント
+
+- [サーバー統合ガイド](../server/docs/pico_integration.md)
+- [API仕様](../server/docs/api.md)
+
+## 🤝 開発
+
+このプロジェクトはNext.jsのApp Routerを使用しています。
+
+### コンポーネント追加
+
+新しいコンポーネントは `app/` ディレクトリに追加してください。
+
+```bash
+# ホットリロードで開発
+npm run dev
+```
+
+### ESLintチェック
+
+```bash
+npm run lint
+```
+
+## 📝 ライセンス
+
+MIT License
+
+## 🔗 関連リンク
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
