@@ -151,10 +151,10 @@ interface LogEntry {
 - [x] 基本的なレイアウト作成
 - [x] モックデータでのUI実装
 
-### Phase 2: データ通信（🚧 一部完了）
-- [ ] WebSocket接続実装
-- [ ] API Routes作成
-- [ ] データ受信・パース処理
+### Phase 2: データ通信（✅ 完了）
+- [x] Server-Sent Events (SSE) 実装
+- [x] API Routes作成
+- [x] データ受信・パース処理
 - [x] 状態管理の実装（Zustand）
 
 ### Phase 3: 可視化機能（✅ 完了）
