@@ -1,7 +1,8 @@
 'use client';
 
 import { useSensorStore } from '@/lib/store';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { LogEntry } from '@/types/sensor';
 
 export default function DataLog() {
     const logs = useSensorStore((state) => state.logs);
@@ -9,11 +10,62 @@ export default function DataLog() {
     const logContainerRef = useRef<HTMLDivElement>(null);
     const [autoScroll, setAutoScroll] = useState(true);
 
+    // フィルタリング・検索用のステート
+    const [searchQuery, setSearchQuery] = useState('');
+    const [eventTypeFilter, setEventTypeFilter] = useState<'all' | 'normal' | 'warning' | 'error'>('all');
+    const [timeRange, setTimeRange] = useState<'all' | '1min' | '5min' | '10min'>('all');
+
     useEffect(() => {
         if (autoScroll && logContainerRef.current) {
             logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
         }
     }, [logs, autoScroll]);
+
+    // フィルタリングされたログ
+    const filteredLogs = useMemo(() => {
+        let filtered = [...logs];
+
+        // 時間範囲フィルター
+        if (timeRange !== 'all') {
+            const now = Date.now();
+            const timeRangeMs = {
+                '1min': 60 * 1000,
+                '5min': 5 * 60 * 1000,
+                '10min': 10 * 60 * 1000,
+            }[timeRange];
+
+            filtered = filtered.filter(log => now - log.timestamp <= timeRangeMs);
+        }
+
+        // イベントタイプフィルター
+        if (eventTypeFilter !== 'all') {
+            filtered = filtered.filter(log => log.eventType === eventTypeFilter);
+        }
+
+        // 検索クエリフィルター
+        if (searchQuery.trim()) {
+            const query = searchQuery.toLowerCase();
+            filtered = filtered.filter(log => {
+                // メッセージで検索
+                if (log.message?.toLowerCase().includes(query)) return true;
+
+                // センサー値で検索
+                const sensorStr = `${log.data.sensors.left} ${log.data.sensors.center} ${log.data.sensors.right}`;
+                if (sensorStr.includes(query)) return true;
+
+                // モーター値で検索
+                const motorStr = `${log.data.motors.left.speed} ${log.data.motors.right.speed}`;
+                if (motorStr.includes(query)) return true;
+
+                // ステータスで検索
+                if (log.data.status.toLowerCase().includes(query)) return true;
+
+                return false;
+            });
+        }
+
+        return filtered;
+    }, [logs, searchQuery, eventTypeFilter, timeRange]);
 
     const getEventTypeColor = (eventType: string) => {
         switch (eventType) {
@@ -75,11 +127,11 @@ export default function DataLog() {
     return (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
             <div className="p-6 border-b border-gray-200">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-4">
                     <div>
                         <h2 className="text-xl font-bold text-gray-800">データログ</h2>
                         <p className="text-sm text-gray-500 mt-1">
-                            {logs.length} / 1000 エントリ
+                            {filteredLogs.length} / {logs.length} エントリ
                         </p>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -108,18 +160,56 @@ export default function DataLog() {
                         </button>
                     </div>
                 </div>
+
+                {/* フィルターコントロール */}
+                <div className="flex items-center space-x-3">
+                    {/* 検索入力 */}
+                    <div className="flex-1">
+                        <input
+                            type="text"
+                            placeholder="検索... (メッセージ、センサー値、モーター値、ステータス)"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                    </div>
+
+                    {/* イベントタイプフィルター */}
+                    <select
+                        value={eventTypeFilter}
+                        onChange={(e) => setEventTypeFilter(e.target.value as any)}
+                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        <option value="all">全てのイベント</option>
+                        <option value="normal">通常</option>
+                        <option value="warning">警告</option>
+                        <option value="error">エラー</option>
+                    </select>
+
+                    {/* 時間範囲フィルター */}
+                    <select
+                        value={timeRange}
+                        onChange={(e) => setTimeRange(e.target.value as any)}
+                        className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        <option value="all">全期間</option>
+                        <option value="1min">直近1分</option>
+                        <option value="5min">直近5分</option>
+                        <option value="10min">直近10分</option>
+                    </select>
+                </div>
             </div>
 
             <div
                 ref={logContainerRef}
                 className="h-96 overflow-y-auto p-4 space-y-2 bg-gray-50"
             >
-                {logs.length === 0 ? (
+                {filteredLogs.length === 0 ? (
                     <div className="text-center text-gray-400 py-12">
-                        ログエントリがありません
+                        {logs.length === 0 ? 'ログエントリがありません' : 'フィルター条件に一致するログがありません'}
                     </div>
                 ) : (
-                    logs.map((log) => (
+                    filteredLogs.map((log) => (
                         <div
                             key={log.id}
                             className={`p-3 rounded-lg border text-xs font-mono ${getEventTypeColor(

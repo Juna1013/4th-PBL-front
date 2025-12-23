@@ -1,6 +1,4 @@
-/**
- * センサーデータの型定義
- */
+// センサーデータの型定義
 
 export interface SensorData {
   timestamp: number; // Unix timestamp (ms)
