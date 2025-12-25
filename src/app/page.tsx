@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Navigation from '@/components/Navigation';
-import { GlobeIcon, BarChartIcon, GearIcon, ArrowRightIcon } from '@radix-ui/react-icons';
+import { GlobeIcon, BarChartIcon, GearIcon, ArrowRightIcon, GitHubLogoIcon } from '@radix-ui/react-icons';
 
 export default function Home() {
   return (
@@ -13,10 +13,10 @@ export default function Home() {
         {/* ヒーローセクション */}
         <section className="max-w-7xl mx-auto py-10 text-center">
 
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-900 mb-6">
-            次世代の <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">
-              ライントレース解析
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-slate-900 mb-6 flex flex-col md:flex-row items-center justify-center gap-6">
+            <GitHubLogoIcon className="w-24 h-24 text-slate-800" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 pb-2">
+              Endra Hub
             </span>
           </h1>
 
