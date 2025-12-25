@@ -14,7 +14,22 @@ export default function Home() {
         <section className="max-w-7xl mx-auto py-10 text-center">
 
           <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-slate-900 mb-6 flex flex-col md:flex-row items-center justify-center gap-6">
-            <GitHubLogoIcon className="w-24 h-24 text-slate-800" />
+
+            {/* SVGグラデーション定義 */}
+            <svg width="0" height="0" className="absolute w-0 h-0 overflow-hidden" aria-hidden="true">
+              <defs>
+                <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#38bdf8" />
+                  <stop offset="100%" stopColor="#2563eb" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <GitHubLogoIcon
+              className="w-24 h-24"
+              style={{ fill: 'url(#icon-gradient)' }}
+            />
+
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 pb-2">
               Endra Hub
             </span>
