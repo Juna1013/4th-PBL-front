@@ -1,164 +1,142 @@
 'use client';
 
+import { useTelemetry } from '@/hooks/useTelemetry';
 import { useEffect, useState } from 'react';
-import Header from '@/components/Header';
-import DigitalTwin from '@/components/DigitalTwin';
-import SensorDisplay from '@/components/SensorDisplay';
-import DataLog from '@/components/DataLog';
-// import RealtimeChart from '@/components/RealtimeChart'; // 一時的に無効化
-import AlertSystem from '@/components/AlertSystem';
-import { useSensorStore } from '@/lib/store';
-import { startMockDataStream } from '@/lib/mockData';
-import { useRealtimeData } from '@/hooks/useRealtimeData';
 
 export default function Home() {
-  const updateSensorData = useSensorStore((state) => state.updateSensorData);
-  const updateStatistics = useSensorStore((state) => state.updateStatistics);
-  const setConnectionStatus = useSensorStore((state) => state.setConnectionStatus);
+  const { data, dataCount, error } = useTelemetry(500);
+  const [startTime] = useState(Date.now());
+  const [uptime, setUptime] = useState(0);
 
-  // モックモードとリアルモードの切り替え
-  const [useMockData, setUseMockData] = useState(true);
-  const [startTime, setStartTime] = useState(Date.now());
-
-  // リアルタイムデータ受信（SSE）
-  const { isConnected, error } = useRealtimeData({
-    enabled: !useMockData,
-    onData: (data) => {
-      updateSensorData(data);
-
-      // 統計情報を更新
-      const avgSpeed = (data.motors.left.speed + data.motors.right.speed) / 2;
-      updateStatistics({
-        runningTime: Date.now() - startTime,
-        averageSpeed: avgSpeed,
-        sensorReactions: data.sensors.lineDetected ? 1 : 0,
-        errorCount: data.status === 'error' ? 1 : 0,
-      });
-    },
-    onError: (err) => {
-      console.error('Realtime data error:', err);
-      setConnectionStatus({ connected: false });
-    },
-  });
-
-  // モックデータストリーム
+  // 稼働時間を更新
   useEffect(() => {
-    if (!useMockData) return;
+    const interval = setInterval(() => {
+      setUptime(Math.floor((Date.now() - startTime) / 1000));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [startTime]);
 
-    const stopStream = startMockDataStream((data) => {
-      updateSensorData(data);
-
-      // 統計情報を更新
-      const avgSpeed = (data.motors.left.speed + data.motors.right.speed) / 2;
-      updateStatistics({
-        runningTime: Date.now() - startTime,
-        averageSpeed: avgSpeed,
-        sensorReactions: data.sensors.lineDetected ? 1 : 0,
-        errorCount: data.status === 'error' ? 1 : 0,
-      });
-    }, 500);
-
-    return () => stopStream();
-  }, [useMockData, updateSensorData, updateStatistics, startTime]);
-
-  // 接続状態の更新
-  useEffect(() => {
-    if (!useMockData) {
-      setConnectionStatus({ connected: isConnected });
-    }
-  }, [isConnected, useMockData, setConnectionStatus]);
+  const sensors = data?.sensors || data?.sensor_values || Array(8).fill(1);
+  const blackCount = data?.black_detected || sensors.filter((v) => v === 0).length;
+  const sensorBinary = data?.sensor_binary || sensors.join('');
 
   return (
-    <div className="min-h-screen bg-zinc-100 dark:bg-zinc-800">
-      <Header />
+    <div className="min-h-screen p-6 text-slate-200 font-sans" style={{
+      background: 'radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%)',
+      fontFamily: "'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif", // 日本語フォントを追加
+    }}>
+      {/* 背景の装飾的な光 */}
+      <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="fixed bottom-0 left-0 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* アラートシステム */}
-      <AlertSystem />
+      <div className="max-w-5xl mx-auto relative z-10">
+        {/* ヘッダー */}
+        <header className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+          <div>
+            <h1 className="text-3xl font-light tracking-tight text-white mb-2">
+              テレメトリ <span className="font-bold text-amber-400">ダッシュボード</span>
+            </h1>
+            <p className="text-slate-400 text-xs tracking-wider uppercase">リアルタイム・ライントレース解析システム</p>
+          </div>
 
-      <main className="container mx-auto px-4 sm:px-6 py-8 max-w-7xl">
-        {/* モード切り替えボタン */}
-        <div className="mb-8 bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-6 border border-zinc-200 dark:border-zinc-700 transition-all duration-300 hover:shadow-xl animate-fade-in">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-center space-x-4">
-              <span className="text-sm font-bold text-zinc-700 dark:text-zinc-300">データソース:</span>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => {
-                    setUseMockData(true);
-                    setStartTime(Date.now());
-                  }}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${useMockData
-                    ? 'bg-indigo-600 text-white shadow-md hover:bg-indigo-700'
-                    : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700'
-                    }`}
-                >
-                  モックデータ
-                </button>
-                <button
-                  onClick={() => {
-                    setUseMockData(false);
-                    setStartTime(Date.now());
-                  }}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${!useMockData
-                    ? 'bg-green-600 text-white shadow-md hover:bg-green-700'
-                    : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700'
-                    }`}
-                >
-                  リアルタイムデータ (SSE)
-                </button>
+          <div className="flex gap-4">
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-slate-500 uppercase tracking-wider font-bold">システム状態</span>
+              <div className="flex items-center gap-2 text-emerald-400 font-medium bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.5)]"></div>
+                <span className="text-sm">稼働中</span>
               </div>
             </div>
-            {!useMockData && (
-              <div className="flex items-center space-x-2 backdrop-blur-sm bg-zinc-50/50 dark:bg-black/50 px-3 py-1.5 rounded-full">
-                <div
-                  className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'
-                    }`}
-                />
-                <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
-                  {isConnected ? 'SSE接続中' : error ? 'エラー' : '接続待機中'}
-                </span>
+            <div className="flex flex-col items-end">
+              <span className="text-xs text-slate-500 uppercase tracking-wider font-bold">受信データ数</span>
+              <span className="text-lg font-mono text-white tabular-nums">{dataCount.toLocaleString()}</span>
+            </div>
+          </div>
+        </header>
+
+        {/* メインカード */}
+        <div className="grid gap-6">
+          {/* センサーカード */}
+          <div className="relative overflow-hidden rounded-3xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-xl shadow-2xl">
+            {/* カードヘッダー */}
+            <div className="px-8 py-6 border-b border-slate-700/50 flex justify-between items-center bg-gradient-to-r from-slate-800/50 to-transparent">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-amber-400/10 rounded-lg">
+                  <span className="text-xl">📍</span>
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-white">センサーアレイ</h2>
+                  <p className="text-xs text-slate-400">8チャンネル 光学ライン検出</p>
+                </div>
               </div>
-            )}
+              <div className="text-right">
+                <span className="text-xs text-slate-500 block font-bold">最終更新</span>
+                <span className="text-sm font-mono text-amber-400">{new Date().toLocaleTimeString('ja-JP')}</span>
+              </div>
+            </div>
+
+            <div className="p-8">
+              {/* センサー可視化 - 高級なインジケーター風 */}
+              <div className="flex justify-center mb-12">
+                <div className="flex gap-3 md:gap-4 p-6 rounded-2xl bg-[#0a0f1c] border border-slate-800 shadow-inner inline-flex">
+                  {sensors.map((value, index) => (
+                    <div key={index} className="flex flex-col items-center gap-3 group">
+                      {/* インジケーターライト */}
+                      <div className="relative">
+                        <div
+                          className={`
+                            w-8 h-12 md:w-10 md:h-16 rounded-md transition-all duration-300 border
+                            ${value === 0
+                              ? 'bg-gradient-to-t from-amber-600 to-amber-300 border-amber-200 shadow-[0_0_20px_rgba(251,191,36,0.4)] scale-105'
+                              : 'bg-slate-800/50 border-slate-700 shadow-none opacity-40'
+                            }
+                          `}
+                        ></div>
+                        {/* 反射光エフェクト */}
+                        {value === 0 && (
+                          <div className="absolute top-1 left-1 right-1 h-[1px] bg-white/50 rounded-full"></div>
+                        )}
+                      </div>
+
+                      {/* ラベル */}
+                      <span className={`
+                        text-[10px] uppercase font-bold tracking-wider transition-colors duration-300
+                        ${value === 0 ? 'text-amber-400' : 'text-slate-600'}
+                      `}>CH.{index}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* データメトリクス */}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="p-5 rounded-2xl bg-slate-900/50 border border-slate-700/50 flex items-center justify-between group hover:border-amber-500/30 transition-colors">
+                  <div>
+                    <span className="text-xs text-slate-400 uppercase tracking-widest block mb-1 font-bold">検出ライン数</span>
+                    <span className="text-3xl font-light text-white">{blackCount}</span>
+                  </div>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${blackCount > 0 ? 'bg-amber-400/20 text-amber-400' : 'bg-slate-800 text-slate-600'}`}>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  </div>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-900/50 border border-slate-700/50 flex items-center justify-between group hover:border-amber-500/30 transition-colors">
+                  <div>
+                    <span className="text-xs text-slate-400 uppercase tracking-widest block mb-1 font-bold">バイナリパターン</span>
+                    <span className="text-3xl font-light text-white font-mono tracking-widest">{sensorBinary}</span>
+                  </div>
+                  <div className="w-10 h-10 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 装飾的なフッターライン */}
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-50"></div>
           </div>
         </div>
-
-        {/* グリッドレイアウト */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* デジタルツイン */}
-          <div className="lg:col-span-2 animate-fade-in">
-            <DigitalTwin />
-          </div>
-
-          {/* リアルタイムチャート - 一時的に無効化 */}
-          {/* <div className="lg:col-span-2">
-            <RealtimeChart />
-          </div> */}
-
-          {/* センサー表示 */}
-          <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <SensorDisplay />
-          </div>
-        </div>
-
-        {/* データログ */}
-        <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
-          <DataLog />
-        </div>
-      </main>
-
-      {/* フッター */}
-      <footer className="bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-700 mt-16">
-        <div className="container mx-auto px-4 sm:px-6 py-6 max-w-7xl">
-          <div className="text-center">
-            <p className="text-sm font-bold text-zinc-800 dark:text-zinc-200">
-              ライントレースカー デジタルツイン システム v1.0
-            </p>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2">
-              © 2025 4th-PBL Project. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }
