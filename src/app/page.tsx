@@ -13,7 +13,7 @@ export default function Home() {
 
       <main className="pt-24 px-6 pb-20">
         {/* ヒーローセクション */}
-        <section className="max-w-7xl mx-auto py-20 text-center">
+        <section className="max-w-7xl mx-auto py-10 text-center">
 
 
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6">
@@ -23,7 +23,7 @@ export default function Home() {
             </span>
           </h1>
 
-          <p className="max-w-2xl mx-auto text-lg text-slate-400 mb-10 leading-relaxed">
+          <p className="max-w-2xl mx-auto text-lg text-slate-400 mb-0 leading-relaxed">
             リアルタイムテレメトリ、高度なセンサー可視化、そして詳細なログ分析。<br />
             教育と研究のために設計された、完全なデジタルツインプラットフォーム。
           </p>
@@ -32,7 +32,7 @@ export default function Home() {
         </section>
 
         {/* ナビゲーショングリッド */}
-        <section className="max-w-7xl mx-auto py-20 grid md:grid-cols-3 gap-8">
+        <section className="max-w-7xl mx-auto py-10 grid md:grid-cols-3 gap-8">
           <Link href="/features" className="block p-8 rounded-3xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm hover:border-blue-500/50 hover:bg-slate-800/80 transition-all group relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform relative z-10">
