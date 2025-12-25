@@ -4,6 +4,7 @@ import { useTelemetry } from '@/hooks/useTelemetry';
 import { useEffect, useState, useRef } from 'react';
 import Navigation from '@/components/Navigation';
 import LineVisualizer from '@/components/dashboard/LineVisualizer';
+import { RocketIcon, TargetIcon, ClipboardCopyIcon, CodeIcon, UpdateIcon } from '@radix-ui/react-icons';
 
 export default function Dashboard() {
     const { data, dataCount, error } = useTelemetry(500);
@@ -103,7 +104,9 @@ export default function Dashboard() {
                         {/* デジタルツイン可視化 */}
                         <section>
                             <div className="flex items-center gap-3 mb-6">
-                                <div className="p-2 bg-sky-100/50 rounded-lg text-xl">🏎️</div>
+                                <div className="p-2 bg-sky-100/50 rounded-lg text-xl flex items-center justify-center">
+                                    <RocketIcon className="w-6 h-6 text-sky-600" />
+                                </div>
                                 <div>
                                     <h2 className="text-xl font-semibold text-slate-800">Digital Twin Monitor</h2>
                                     <p className="text-xs text-slate-500">Real-time 2D Visualization</p>
@@ -121,7 +124,9 @@ export default function Dashboard() {
                         <section>
                             <div className="flex justify-between items-center mb-6">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-blue-100/50 rounded-lg text-xl">📍</div>
+                                    <div className="p-2 bg-blue-100/50 rounded-lg text-xl flex items-center justify-center">
+                                        <TargetIcon className="w-6 h-6 text-blue-600" />
+                                    </div>
                                     <div>
                                         <h2 className="text-xl font-semibold text-slate-800">センサーアレイ</h2>
                                         <p className="text-xs text-slate-500">8チャンネル 光学ライン検出</p>
@@ -171,7 +176,7 @@ export default function Dashboard() {
                                             <span className="text-3xl font-light text-slate-800 font-mono tracking-widest">{sensorBinary}</span>
                                         </div>
                                         <div className="w-10 h-10 rounded-full bg-sky-100 text-sky-500 flex items-center justify-center">
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                                            <CodeIcon className="w-5 h-5" />
                                         </div>
                                     </div>
                                 </div>
@@ -194,7 +199,7 @@ export default function Dashboard() {
                                     }}
                                     className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 px-3 py-1 rounded-full transition-colors flex items-center gap-1"
                                 >
-                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+                                    <ClipboardCopyIcon className="w-3 h-3" />
                                     Copy All
                                 </button>
                             </div>
