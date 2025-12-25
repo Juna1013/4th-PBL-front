@@ -105,8 +105,8 @@ export default function Dashboard() {
                         <section>
                             <div className="flex items-center gap-2 mb-6 border-b border-slate-200 pb-2">
                                 <RocketIcon className="w-5 h-5 text-sky-500" />
-                                <h2 className="text-lg font-semibold text-slate-800">Digital Twin Monitor</h2>
-                                <span className="text-xs text-slate-400 ml-auto md:ml-2 font-mono">Real-time 2D Visualization</span>
+                                <h2 className="text-lg font-semibold text-slate-800">デジタルツインモニター</h2>
+                                <span className="text-xs text-slate-400 ml-auto md:ml-2 font-mono">リアルタイム2D可視化</span>
                             </div>
                             <div className="flex justify-center py-4">
                                 <LineVisualizer
@@ -122,10 +122,10 @@ export default function Dashboard() {
                                 <div className="flex items-center gap-2">
                                     <TargetIcon className="w-5 h-5 text-blue-500" />
                                     <h2 className="text-lg font-semibold text-slate-800">センサーアレイ</h2>
-                                    <span className="hidden md:inline text-xs text-slate-400 font-mono">8-Channel Optical Line Detection</span>
+                                    <span className="hidden md:inline text-xs text-slate-400 font-mono">8チャンネル光学ラインセンサー</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-xs">
-                                    <span className="text-slate-400 font-bold">LATEST:</span>
+                                    <span className="text-slate-400 font-bold">最終更新:</span>
                                     <span className="font-mono text-sky-600">{new Date().toLocaleTimeString('ja-JP')}</span>
                                 </div>
                             </div>
@@ -180,9 +180,9 @@ export default function Dashboard() {
                         <section className="lg:col-span-2">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-2">
-                                    <h3 className="text-slate-700 font-medium">Reinforcement Learning Set</h3>
+                                    <h3 className="text-slate-700 font-medium">強化学習用データセット</h3>
                                     <div className="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-600 border border-sky-200">
-                                        LIVE LOG
+                                        ライブログ
                                     </div>
                                 </div>
                                 <button
@@ -193,7 +193,7 @@ export default function Dashboard() {
                                     className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 px-3 py-1 rounded-full transition-colors flex items-center gap-1"
                                 >
                                     <ClipboardCopyIcon className="w-3 h-3" />
-                                    Copy All
+                                    全コピー
                                 </button>
                             </div>
                             <div>
@@ -202,7 +202,7 @@ export default function Dashboard() {
                                     className="bg-slate-50 p-4 rounded-xl border border-slate-200 h-64 overflow-y-auto font-mono text-xs md:text-sm text-slate-600 scroll-smooth shadow-inner"
                                 >
                                     {logs.length === 0 ? (
-                                        <div className="text-slate-400 italic">Waiting for telemetry data...</div>
+                                        <div className="text-slate-400 italic">テレメトリデータを待機中...</div>
                                     ) : (
                                         logs.map((log, index) => (
                                             <div key={index} className="mb-2 whitespace-pre border-b border-slate-200 pb-2 last:border-0 last:pb-0 last:mb-0">
