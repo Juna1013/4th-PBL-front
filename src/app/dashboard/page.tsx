@@ -22,6 +22,13 @@ export default function Dashboard() {
     const blackCount = data?.black_detected || sensors.filter((v) => v === 0).length;
     const sensorBinary = data?.sensor_binary || sensors.join('');
 
+
+    // JSON整形関数
+    const formatData = (s: number[], t: number) => `{
+  "sensors": [${s.join(', ')}],
+  "timestamp": ${t}
+}`;
+
     return (
         <div className="min-h-screen">
             <Navigation />
@@ -155,34 +162,30 @@ export default function Dashboard() {
 
                         {/* 強化学習用データセット出力 */}
                         <div className="relative overflow-hidden rounded-3xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-xl shadow-2xl">
-                            <div className="px-8 py-6 border-b border-slate-700/50 flex justify-between items-center bg-gradient-to-r from-slate-800/50 to-transparent">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-emerald-400/10 rounded-lg">
-                                        <span className="text-xl">🤖</span>
+                            <div className="bg-slate-900/50 backdrop-blur-sm p-6 rounded-3xl border border-slate-700/50">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="text-slate-200 font-medium">Reinforcement Learning Set</h3>
+                                        <div className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                            READY
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-white">RL Dataset Output</h2>
-                                        <p className="text-xs text-slate-400">Timestamp & Sensor State JSON</p>
-                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            const text = formatData(sensors, Date.now());
+                                            navigator.clipboard.writeText(text);
+                                        }}
+                                        className="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded-full transition-colors flex items-center gap-1"
+                                    >
+                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+                                        Copy JSON
+                                    </button>
                                 </div>
-                                <button
-                                    onClick={() => {
-                                        const jsonString = JSON.stringify({ sensors, timestamp: Date.now() }, null, 2);
-                                        navigator.clipboard.writeText(jsonString);
-                                    }}
-                                    className="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded-full transition-colors flex items-center gap-1"
-                                >
-                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
-                                    Copy JSON
-                                </button>
-                            </div>
-                            <div className="p-6">
-                                <pre className="bg-[#0a0f1c] p-4 rounded-xl border border-slate-800 text-xs md:text-sm font-mono text-emerald-400 overflow-x-auto">
-                                    {JSON.stringify({
-                                        sensors: sensors,
-                                        timestamp: Date.now()
-                                    }, null, 2)}
-                                </pre>
+                                <div className="p-6">
+                                    <pre className="bg-[#0a0f1c] p-4 rounded-xl border border-slate-800 text-xs md:text-sm font-mono text-emerald-400 overflow-x-auto">
+                                        {formatData(sensors, Date.now())}
+                                    </pre>
+                                </div>
                             </div>
                         </div>
                     </div>
