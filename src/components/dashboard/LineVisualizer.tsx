@@ -185,8 +185,8 @@ export default function LineVisualizer({ sensors }: LineVisualizerProps) {
             ctx.stroke();
 
             // 3. 自機位置の計算
-            // 進捗を進める (約10秒で一周)
-            progressRef.current = (progressRef.current + 0.002) % 1;
+            // 進捗を進める (ゆっくり周回)
+            progressRef.current = (progressRef.current + 0.0005) % 1;
 
             const pos = getPositionOnPath(progressRef.current);
 
