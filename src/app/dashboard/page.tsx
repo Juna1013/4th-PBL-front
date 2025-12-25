@@ -130,12 +130,12 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                            <div className="space-y-8">
-                                {/* センサー可視化 */}
-                                <div className="flex justify-center">
-                                    <div className="flex gap-3 md:gap-4 p-6 rounded-2xl bg-white border border-slate-200 shadow-sm inline-flex">
+                            <div className="flex justify-center">
+                                <div className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm inline-block min-w-min max-w-full">
+                                    {/* センサー可視化 */}
+                                    <div className="flex gap-2 md:gap-4 justify-center mb-8 overflow-x-auto pb-2 md:pb-0">
                                         {sensors.map((value, index) => (
-                                            <div key={index} className="flex flex-col items-center gap-3 group">
+                                            <div key={index} className="flex flex-col items-center gap-3 group min-w-[32px]">
                                                 <div className="relative">
                                                     <div
                                                         className={`
@@ -158,17 +158,18 @@ export default function Dashboard() {
                                             </div>
                                         ))}
                                     </div>
-                                </div>
 
-                                {/* データメトリクス */}
-                                <div className="flex justify-center mt-6">
-                                    <div className="flex items-center gap-6 p-5 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                                    {/* 区切り線 */}
+                                    <div className="h-px bg-slate-100 w-full mb-6" />
+
+                                    {/* バイナリパターン */}
+                                    <div className="flex items-center justify-between gap-8">
                                         <div>
                                             <span className="text-xs text-slate-400 uppercase tracking-widest block mb-1 font-bold">バイナリパターン</span>
                                             <span className="text-3xl font-light text-slate-800 font-mono tracking-widest">{sensorBinary}</span>
                                         </div>
-                                        <div className="w-10 h-10 rounded-full bg-sky-100 text-sky-500 flex items-center justify-center">
-                                            <CodeIcon className="w-5 h-5" />
+                                        <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-500 flex items-center justify-center border border-sky-100">
+                                            <CodeIcon className="w-6 h-6" />
                                         </div>
                                     </div>
                                 </div>
