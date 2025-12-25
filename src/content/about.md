@@ -1,58 +1,54 @@
 ---
-title: "技術解説とアーキテクチャ"
+title: "技術スタックとシステム構成"
 date: "2024-12-25"
-description: "ハードウェアとソフトウェアの連携アーキテクチャについて"
+description: "Endra Hubを支えるモダンテクノロジーとアーキテクチャ"
+---
+
+## 採用技術スタック
+
+本プロジェクトでは、開発効率、パフォーマンス、そして将来的な拡張性を考慮し、以下のモダンな技術スタックを採用しています。
+
+### ⚡ Frontend & Framework
+
+**Next.js 14 (App Router) + TypeScript**
+
+アプリケーションの基盤には、ReactフレームワークのデファクトスタンダードであるNext.jsを採用しています。特にApp Router機能により、サーバーサイドとクライアントサイドのロジックを効率的に分離し、高速な初期描画を実現しています。また、言語にはTypeScriptを採用し、ハードウェア（センサーデータ）からフロントエンドまで一貫した型定義を用いることで、開発時のバグを大幅に抑制しています。
+
+### 🎨 UI & Styling
+
+**Tailwind CSS + Radix UI**
+
+スタイリングにはユーティリティファーストのTailwind CSSを使用し、迅速なUI構築を行っています。また、アクセシビリティに優れたヘッドレスUIライブラリであるRadix UI（Icons含む）を組み合わせることで、美しく、かつ誰にでも使いやすいインターフェースを提供しています。ダークモードやレスポンシブデザインにも完全対応しています。
+
+### 📊 Visualization
+
+**HTML5 Canvas API**
+
+ライントレースカーの軌跡やセンサー状態の高頻度な更新（60fps以上）に対応するため、重いDOM操作を避け、HTML5 Canvas APIを用いた直接描画を行っています。これにより、数千点のデータポイントを持つログもスムーズにアニメーション表示することが可能です。
+
+### 🤖 Embedded System
+
+**Raspberry Pi Pico W + MicroPython**
+
+エッジデバイス（ライントレースカー）の制御には、安価でWi-Fi機能を内蔵したRaspberry Pi Pico Wを採用。ファームウェアはMicroPythonで記述されており、HTTPリクエストを通じてJSON形式のテレメトリデータをクラウド（Endra Hub）へ送信します。Pythonエコシステムを活用することで、将来的なオンデバイスAIの実装も見据えています。
+
 ---
 
 ## システムアーキテクチャ
 
-本プロジェクトは、組み込みハードウェア（Raspberry Pi Pico W）とモダンウェブフレームワーク（Next.js）をシームレスに統合したIoTシステムです。
-
-### 構成図
+Endra Hubは、IoTデバイスからのデータをリアルタイムに集約し、可視化するハブとして機能します。
 
 ```mermaid
 graph LR
-    Pico[Raspberry Pi Pico W] -->|POST /api/telemetry| Next[Next.js API]
-    Next -->|State Store| Store[InMemory Store]
-    Store -->|GET /api/telemetry| Client[Web Dashboard]
+    Pico[Raspberry Pi Pico W] -->|HTTP POST (JSON)| API[Next.js API Route]
+    API -->|Store| State[Global State Manager]
+    State -->|Update| UI[Dashboard UI]
 ```
 
-※ 上記は概念図です。
+1.  **データ送信**: Pico Wがセンサー値、制御偏差、タイムスタンプを含むJSONデータをPOST送信。
+2.  **データ処理**: Next.jsのAPIエンドポイントがデータを受け取り、サーバーサイドのインメモリステートを更新。
+3.  **リアルタイム反映**: クライアントサイドはそのステートをポーリング（またはWebSocket）で監視し、ダッシュボードを即座に更新します。
 
-1.  **Raspberry Pi Pico W**: センサーデータを取得し、JSON形式でAPIのエンドポイントに送信します。
-2.  **Next.js API**: データを受信し、インメトリストア（シングルトン）に一時保存します。
-3.  **Web Dashboard**: 定期的にAPIをポーリングして最新データを取得し、Reactコンポーネントで描画します。
+### 通信の最適化
 
-### 通信プロトコル
-
-データ通信はシンプルなHTTP POST/GETリクエストで行われます。これにより、WebSocketのような常時接続を維持する必要がなく、ファイアウォール環境下でも安定して動作します。
-
-#### 送信データ形式 (POST)
-
-エンドポイント: `/api/telemetry`
-
-```json
-{
-  "sensors": [0, 1, 1, 1, 1, 1, 1, 0], 
-  "timestamp": 1710928800000
-}
-```
-
-- `sensors`: 8要素の配列。0が黒（ライン）、1が白（床）を表します。
-- `timestamp`: データの取得時刻（Unixミリ秒）。
-
-### 技術スタック
-
-本プロジェクトで採用している主要な技術です。
-
-| カテゴリ | 技術 | 解説 |
-| --- | --- | --- |
-| **Frontend** | Next.js 14 | App Routerを採用した最新のモダンフレームワーク |
-| **Language** | TypeScript | 型安全性による堅牢なコードベース |
-| **Styling** | Tailwind CSS | ユーティリティファーストなCSSフレームワーク |
-| **Hardware** | MicroPython | Pico W制御用の軽量Python環境 |
-| **Deploy** | Vercel | 高速なエッジネットワークへのデプロイ |
-
-### 今後の展望
-
-現在はインメモリでデータを管理していますが、長期間のログ分析のためにデータベース（PostgreSQLやSupabase）への永続化機能の実装を計画しています。また、強化学習モデルをブラウザ上で動かし、シミュレーションを行う機能の追加も検討中です。
+通信プロトコルには、IoT機器で一般的なMQTTではなく、あえてシンプルなHTTPを採用しています。これはプロトタイピングの容易さと、ファイアウォール環境下での通過性を優先したためです。データペイロードは極限まで軽量化され、低帯域な環境でも安定したロギングが可能です。
