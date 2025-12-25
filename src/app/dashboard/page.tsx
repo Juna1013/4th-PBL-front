@@ -167,7 +167,7 @@ export default function Dashboard() {
                                 </div>
                                 <button
                                     onClick={() => {
-                                        const jsonString = JSON.stringify({ timestamp: Date.now(), sensors }, null, 2);
+                                        const jsonString = JSON.stringify({ sensors, timestamp: Date.now() }, null, 2);
                                         navigator.clipboard.writeText(jsonString);
                                     }}
                                     className="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded-full transition-colors flex items-center gap-1"
@@ -179,8 +179,8 @@ export default function Dashboard() {
                             <div className="p-6">
                                 <pre className="bg-[#0a0f1c] p-4 rounded-xl border border-slate-800 text-xs md:text-sm font-mono text-emerald-400 overflow-x-auto">
                                     {JSON.stringify({
-                                        timestamp: Date.now(),
-                                        sensors: sensors
+                                        sensors: sensors,
+                                        timestamp: Date.now()
                                     }, null, 2)}
                                 </pre>
                             </div>
