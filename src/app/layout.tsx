@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://4th-pbl-front.vercel.app'),
   title: "Endra Hub | ライントレースカー デジタルツイン",
   description: "Endra Hubは、ライントレースカーのセンサー情報をリアルタイムで可視化・解析するデジタルツインプラットフォームです。",
   openGraph: {
