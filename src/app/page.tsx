@@ -27,7 +27,7 @@ export default function Home() {
             </a>
 
             <span className="pb-2">
-              <span className="text-slate-900">Endra</span> <span className="text-sky-500">Hub</span>
+              <span className="text-slate-900">Endra</span> <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">Hub</span>
             </span>
           </h1>
 

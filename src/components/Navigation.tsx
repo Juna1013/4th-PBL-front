@@ -18,7 +18,7 @@ export default function Navigation() {
                 <div className="flex items-center justify-between h-16">
                     <div className="flex-shrink-0">
                         <Link href="/" className="text-xl font-light text-slate-800 tracking-tight">
-                            Endra <span className="font-bold text-sky-500">Hub</span>
+                            Endra <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">Hub</span>
                         </Link>
                     </div>
                     <div className="hidden md:block">
