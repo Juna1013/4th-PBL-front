@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ライントレースカー デジタルツイン",
-  description: "ライントレースカーのセンサーとモーターの状況をリアルタイムで可視化するデジタルツインシステム",
+  title: "Endra Hub | ライントレースカー デジタルツイン",
+  description: "Endra Hubは、ライントレースカーのセンサー情報をリアルタイムで可視化・解析するデジタルツインプラットフォームです。",
 };
 
 export default function RootLayout({

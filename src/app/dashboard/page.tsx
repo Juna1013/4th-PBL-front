@@ -92,7 +92,7 @@ export default function Dashboard() {
                     <header className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
                         <div>
                             <h1 className="text-3xl font-light tracking-tight text-slate-800 mb-2">
-                                テレメトリ <span className="font-bold text-sky-500">ダッシュボード</span>
+                                Endra Hub <span className="font-bold text-sky-500">ダッシュボード</span>
                             </h1>
                             <p className="text-slate-500 text-xs tracking-wider uppercase">リアルタイム・ライントレース解析システム</p>
                         </div>
