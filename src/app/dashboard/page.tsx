@@ -87,8 +87,8 @@ export default function Dashboard() {
                         {/* デジタルツイン可視化 */}
                         <section>
                             <div className="flex items-center gap-2 mb-6 border-b border-slate-200 pb-2">
-                                <RocketIcon className="w-5 h-5 text-sky-500" />
-                                <h2 className="text-lg font-semibold text-slate-800">デジタルツインモニター</h2>
+                                <RocketIcon className="w-6 h-6 text-sky-500" />
+                                <h2 className="text-2xl font-bold text-slate-800">デジタルツインモニター</h2>
                                 <span className="text-xs text-slate-400 ml-auto md:ml-2 font-mono">リアルタイム2D可視化</span>
                             </div>
                             <div className="flex justify-center py-4">
@@ -103,8 +103,8 @@ export default function Dashboard() {
                         <section>
                             <div className="flex items-center justify-between gap-2 mb-6 border-b border-slate-200 pb-2">
                                 <div className="flex items-center gap-2">
-                                    <TargetIcon className="w-5 h-5 text-blue-500" />
-                                    <h2 className="text-lg font-semibold text-slate-800">センサーアレイ</h2>
+                                    <TargetIcon className="w-6 h-6 text-blue-500" />
+                                    <h2 className="text-2xl font-bold text-slate-800">センサーアレイ</h2>
                                     <span className="hidden md:inline text-xs text-slate-400 font-mono">8チャンネル光学ラインセンサー</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-xs">
