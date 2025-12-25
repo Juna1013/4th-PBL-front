@@ -3,19 +3,13 @@
  * 全てのAPI Routesで共有されるデータストア
  */
 
+const globalForTelemetry = global as unknown as { telemetryStore: TelemetryStore };
+
 class TelemetryStore {
-    private static instance: TelemetryStore;
     private history: any[] = [];
     private readonly MAX_HISTORY = 100;
 
-    private constructor() { }
-
-    static getInstance(): TelemetryStore {
-        if (!TelemetryStore.instance) {
-            TelemetryStore.instance = new TelemetryStore();
-        }
-        return TelemetryStore.instance;
-    }
+    constructor() { }
 
     addData(data: any): void {
         this.history.push(data);
@@ -60,7 +54,7 @@ class TelemetryStore {
 
         return {
             total_records: this.history.length,
-            avg_error: errors.length > 0 ? errors.reduce((a, b) => a + b, 0) / errors.length : 0,
+            avg_error: errors.length > 0 ? errors.reduce((a, b: any) => a + b, 0) / errors.length : 0,
             max_left_speed: leftSpeeds.length > 0 ? Math.max(...leftSpeeds) : 0,
             max_right_speed: rightSpeeds.length > 0 ? Math.max(...rightSpeeds) : 0,
             min_left_speed: leftSpeeds.length > 0 ? Math.min(...leftSpeeds) : 0,
@@ -69,4 +63,6 @@ class TelemetryStore {
     }
 }
 
-export const telemetryStore = TelemetryStore.getInstance();
+export const telemetryStore = globalForTelemetry.telemetryStore || new TelemetryStore();
+
+if (process.env.NODE_ENV !== 'production') globalForTelemetry.telemetryStore = telemetryStore;
