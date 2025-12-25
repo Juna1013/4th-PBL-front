@@ -163,32 +163,12 @@ export default function LineVisualizer({ sensors }: LineVisualizerProps) {
             // 1. キャンバスリセット
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 2. コース描画（ネオン風）
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = 'rgba(59, 130, 246, 0.5)'; // blue-500
-            ctx.strokeStyle = '#3b82f6';
-            ctx.lineWidth = 4;
-            ctx.lineJoin = 'round';
-
-            ctx.beginPath();
-            // 角丸正方形を描く
-            ctx.roundRect(centerX - size / 2, centerY - size / 2, size, size, radius);
-            ctx.stroke();
-
-            // スタートライン
-            ctx.shadowBlur = 0;
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(centerX, centerY + size / 2 - 10);
-            ctx.lineTo(centerX, centerY + size / 2 + 10);
-            ctx.stroke();
-
-            // 3. 自機位置の計算
+            // 2. 自機位置とセンサー偏差の計算
             // 進捗を進める (ゆっくり周回)
             progressRef.current = (progressRef.current + 0.0005) % 1;
 
-            const pos = getPositionOnPath(progressRef.current);
+            // コース上の理想的な位置と向きを取得
+            const pathPos = getPositionOnPath(progressRef.current);
 
             // センサー偏差の計算
             const currentSensors = sensorsRef.current;
@@ -201,64 +181,108 @@ export default function LineVisualizer({ sensors }: LineVisualizerProps) {
                 }
             });
 
-            // 偏差 (-1.0 ~ 1.0)
-            // センサーindex 0が左、7が右。
-            // 左(0)が反応 = ラインは左にある = 車体は右にズレている(偏差プラス)
-            // 右(7)が反応 = ラインは右にある = 車体は左にズレている(偏差マイナス)
-            // としたいが、ここでは単純に「ラインからのズレ」を描画したい。
-            // センサー重心が左(小さいIndex)なら、車体はラインに対して右側にいる。
-            // コースラインに対して、法線方向にずらす。
-
+            // 左右のズレ (-1.0 ~ 1.0 程度)
+            // 3.5が中心。centerIdx < 3.5 (左センサー反応) -> 車体は右にあるべき -> しかし画面上では左にラインが見える
+            // ヘディングアップ視点では、車体の左右移動として表現する
             let deviation = 0;
             if (activeCount > 0) {
                 const centerIdx = weightedSum / activeCount;
-                // 中心が3.5。
-                // centerIdxが0(左)のとき、車体は右にずれていることにする
-                deviation = (3.5 - centerIdx) * 6; // スケール係数
+                deviation = (centerIdx - 3.5) * 8; // 係数調整
             }
 
-            // 座標変換: pos.x, pos.y から pos.angle に対して垂直方向に deviation ずらす
-            // 進行方向 angle に対して +90度 (Math.PI/2) が右側
-            const normalAngle = pos.angle + Math.PI / 2;
+            // --- 描画パイプライン ---
 
-            const carX = pos.x + Math.cos(normalAngle) * deviation;
-            const carY = pos.y + Math.sin(normalAngle) * deviation;
-
-            // 4. 自機描画
+            // A. コースの描画（背景）
+            // ヘディングアップにするため、キャンバス全体を回転・移動させる
             ctx.save();
-            ctx.translate(carX, carY);
-            // 進行方向に回転。deviationによる自転も少し加えるとリアルかも
-            const rotation = pos.angle + (deviation * 0.05);
-            // 座標系が右回りのため、angleの扱いに注意。canvasの回転は時計回り。
-            // getPositionOnPathのangleは反時計回りベースで計算したので符号反転が必要かもだが、
-            // 試行錯誤より見た目で調整。
-            // Start地点(下辺右向き)でangle=0。Canvas回転も0で右向き。OK。
-            // 右辺(上向き)でangle=-PI/2。Canvas回転も-PI/2で上向き。OK。
+
+            // A-1. 視点の中心を画面下部中央に設定
+            const viewCenterX = canvas.width / 2;
+            const viewCenterY = canvas.height * 0.75;
+            ctx.translate(viewCenterX, viewCenterY);
+
+            // A-2. 進行方向が常に「上 (-PI/2)」になるように全体を回転
+            // pathPos.angle は現在の進行方向。これを -PI/2 に合わせる
+            const rotation = -Math.PI / 2 - pathPos.angle;
             ctx.rotate(rotation);
 
-            // 車体
+            // A-3. 現在地が中心に来るようにコース全体を逆移動
+            ctx.translate(-pathPos.x, -pathPos.y);
+
+            // A-4. コース描画（ネオン風）
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = 'rgba(59, 130, 246, 0.4)'; // blue-500
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 6;
+            ctx.lineJoin = 'round';
+
+            ctx.beginPath();
+            ctx.roundRect(centerX - size / 2, centerY - size / 2, size, size, radius);
+            ctx.stroke();
+
+            // スタートライン
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY + size / 2 - 15);
+            ctx.lineTo(centerX, centerY + size / 2 + 15);
+            ctx.stroke();
+
+            // グリッド線などを描画して地面の移動感を出す（オプション）
+            // ここではシンプルさを優先して省略
+
+            ctx.restore();
+
+
+            // B. 車体の描画（固定位置 + 左右偏差）
+            ctx.save();
+            // 車体は画面下部中央付近に固定 + センサーによる左右ズレ
+            // deviationがプラス（右センサー反応=ラインが右）なら、車体は左にいる...ではなく
+            // 単純に「ラインからのズレ」を車体の横移動で表現する
+            // centerIdxが大きい(右センサー反応) -> ラインは右にある -> 車体は相対的に左にズレている(Xマイナス)
+            // deviation = (centerIdx - 3.5) * 8
+            // centerIdx=7(右端) -> deviation = 3.5*8 = +28 (右へ移動) 
+            // あれ、右センサーが反応してるなら、ラインを追いかけて右に動くべき？
+            // いや、これは「ズレ」の可視化。
+            // 右センサーが反応している＝車体はラインの左側にいる。
+            // なので、画面上ではライン（中心）に対して車体を「左」に描画すべき。
+            // deviationの符号を反転させる
+
+            const carDisplayX = viewCenterX - deviation;
+            const carDisplayY = viewCenterY;
+
+            ctx.translate(carDisplayX, carDisplayY);
+
+            // 車体は常に上向き (-PI/2) 
+            // キャンバス座標系ではデフォルトで右向き(0)基準で描画していたので -PI/2 回転
+            ctx.rotate(-Math.PI / 2);
+
+            // 車体ビジュアル
             ctx.shadowBlur = 20;
             ctx.shadowColor = '#fbbf24'; // amber-400
-            ctx.fillStyle = '#fbbf24'; // 本体色
+            ctx.fillStyle = '#fbbf24';
 
-            // 三角形
+            // 未来的な戦闘機風の三角形
             ctx.beginPath();
-            ctx.moveTo(10, 0); // 先頭
-            ctx.lineTo(-6, 6);
-            ctx.lineTo(-2, 0); // 凹み
-            ctx.lineTo(-6, -6);
+            ctx.moveTo(12, 0);   // 先頭
+            ctx.lineTo(-8, 8);   // 左翼
+            ctx.lineTo(-4, 0);   // エンジン部凹み
+            ctx.lineTo(-8, -8);  // 右翼
             ctx.closePath();
             ctx.fill();
 
-            // センサーライト表現 (前方)
+            // センサー状態のインジケーター（車体前方に展開）
             currentSensors.forEach((val, i) => {
-                const sx = 0; // 車体中心からの前後位置
-                const sy = -7 + (i * 2); // 左右位置
+                const sx = 8; // 前後位置
+                const sy = -10 + (i * 3); // 左右幅
 
-                ctx.beginPath();
-                // 小さいドット
-                // ctx.arc(sx, sy, 1, 0, Math.PI*2);
-                // ctx.fill();
+                if (val === 0) { // 検知中
+                    ctx.beginPath();
+                    ctx.fillStyle = '#ef4444'; // 検知時は赤
+                    ctx.arc(sx, sy, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             });
 
             ctx.restore();
