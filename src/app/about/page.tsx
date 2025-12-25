@@ -14,7 +14,7 @@ export default function About() {
             <main className="pt-24 px-6 pb-20">
                 <div className="max-w-4xl mx-auto">
                     {/* 記事ヘッダー */}
-                    <div className="text-center mb-16 space-y-4">
+                    <div className="text-center mb-6 space-y-4">
                         <div className="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs text-slate-400 mb-2">
                             {meta.date}
                         </div>
@@ -27,7 +27,7 @@ export default function About() {
                     </div>
 
                     {/* 記事コンテンツ */}
-                    <div className="py-8">
+                    <div className="pb-8">
                         <MarkdownViewer content={content} />
                     </div>
                 </div>
