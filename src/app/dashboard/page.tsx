@@ -3,6 +3,7 @@
 import { useTelemetry } from '@/hooks/useTelemetry';
 import { useEffect, useState } from 'react';
 import Navigation from '@/components/Navigation';
+import LineVisualizer from '@/components/dashboard/LineVisualizer';
 
 export default function Dashboard() {
     const { data, dataCount, error } = useTelemetry(500);
@@ -61,9 +62,27 @@ export default function Dashboard() {
 
                     {/* メインカード */}
                     <div className="grid gap-6">
+                        {/* デジタルツイン可視化 */}
+                        <div className="relative overflow-hidden rounded-3xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-xl shadow-2xl">
+                            <div className="px-8 py-6 border-b border-slate-700/50 flex justify-between items-center bg-gradient-to-r from-slate-800/50 to-transparent">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-blue-400/10 rounded-lg">
+                                        <span className="text-xl">🏎️</span>
+                                    </div>
+                                    <div>
+                                        <h2 className="text-lg font-semibold text-white">Digital Twin Monitor</h2>
+                                        <p className="text-xs text-slate-400">Real-time 2D Visualization</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-8 flex justify-center">
+                                <LineVisualizer sensors={sensors} />
+                            </div>
+                        </div>
+
                         {/* センサーカード */}
                         <div className="relative overflow-hidden rounded-3xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-xl shadow-2xl">
-                            {/* カードヘッダー */}
+                            {/* カードヘッダー */}            {/* カードヘッダー */}
                             <div className="px-8 py-6 border-b border-slate-700/50 flex justify-between items-center bg-gradient-to-r from-slate-800/50 to-transparent">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-amber-400/10 rounded-lg">
