@@ -27,7 +27,7 @@ export default function About() {
                     </div>
 
                     {/* 記事コンテンツ */}
-                    <div className="bg-slate-900/30 border border-slate-800 rounded-3xl p-8 md:p-12 backdrop-blur-sm shadow-xl">
+                    <div className="py-8">
                         <MarkdownViewer content={content} />
                     </div>
                 </div>
