@@ -1,7 +1,7 @@
 'use client';
 
 import { useTelemetry } from '@/hooks/useTelemetry';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Navigation from '@/components/Navigation';
 import LineVisualizer from '@/components/dashboard/LineVisualizer';
 
@@ -9,6 +9,8 @@ export default function Dashboard() {
     const { data, dataCount, error } = useTelemetry(500);
     const [startTime] = useState(Date.now());
     const [uptime, setUptime] = useState(0);
+    const [logs, setLogs] = useState<string[]>([]);
+    const logContainerRef = useRef<HTMLDivElement>(null);
 
     // 稼働時間を更新
     useEffect(() => {
@@ -22,12 +24,35 @@ export default function Dashboard() {
     const blackCount = data?.black_detected || sensors.filter((v) => v === 0).length;
     const sensorBinary = data?.sensor_binary || sensors.join('');
 
-
     // JSON整形関数
     const formatData = (s: number[], t: number) => `{
   "sensors": [${s.join(', ')}],
   "timestamp": ${t}
 }`;
+
+    // ログの更新
+    useEffect(() => {
+        if (data) {
+            const timestamp = data.timestamp || Date.now();
+            const logEntry = formatData(sensors, timestamp);
+
+            setLogs(prev => {
+                // 新しいログを追加し、最新50件のみ保持
+                const newLogs = [...prev, logEntry];
+                if (newLogs.length > 50) {
+                    return newLogs.slice(newLogs.length - 50);
+                }
+                return newLogs;
+            });
+        }
+    }, [data, sensors]); // dataまたはsensorsが更新されたら実行
+
+    // 自動スクロール
+    useEffect(() => {
+        if (logContainerRef.current) {
+            logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+        }
+    }, [logs]);
 
     return (
         <div className="min-h-screen">
@@ -86,7 +111,7 @@ export default function Dashboard() {
 
                         {/* センサーカード */}
                         <div className="relative overflow-hidden rounded-3xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-xl shadow-2xl">
-                            {/* カードヘッダー */}            {/* カードヘッダー */}
+                            {/* カードヘッダー */}
                             <div className="px-8 py-6 border-b border-slate-700/50 flex justify-between items-center bg-gradient-to-r from-slate-800/50 to-transparent">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-amber-400/10 rounded-lg">
@@ -167,24 +192,35 @@ export default function Dashboard() {
                                     <div className="flex items-center gap-2">
                                         <h3 className="text-slate-200 font-medium">Reinforcement Learning Set</h3>
                                         <div className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                                            READY
+                                            LIVE LOG
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => {
-                                            const text = formatData(sensors, Date.now());
+                                            const text = logs.join('\n');
                                             navigator.clipboard.writeText(text);
                                         }}
                                         className="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded-full transition-colors flex items-center gap-1"
                                     >
                                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
-                                        Copy JSON
+                                        Copy All
                                     </button>
                                 </div>
-                                <div className="p-6">
-                                    <pre className="bg-[#0a0f1c] p-4 rounded-xl border border-slate-800 text-xs md:text-sm font-mono text-emerald-400 overflow-x-auto">
-                                        {formatData(sensors, Date.now())}
-                                    </pre>
+                                <div className="p-0">
+                                    <div
+                                        ref={logContainerRef}
+                                        className="bg-[#0a0f1c] p-4 rounded-xl border border-slate-800 h-64 overflow-y-auto font-mono text-xs md:text-sm text-emerald-400 scroll-smooth"
+                                    >
+                                        {logs.length === 0 ? (
+                                            <div className="text-slate-600 italic">Waiting for telemetry data...</div>
+                                        ) : (
+                                            logs.map((log, index) => (
+                                                <div key={index} className="mb-2 whitespace-pre shadow-sm border-b border-slate-800/50 pb-2 last:border-0 last:pb-0 last:mb-0">
+                                                    {log}
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
