@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import DigitalTwin from '@/components/DigitalTwin';
 import SensorDisplay from '@/components/SensorDisplay';
-import MotorDisplay from '@/components/MotorDisplay';
-import StatisticsDisplay from '@/components/StatisticsDisplay';
 import DataLog from '@/components/DataLog';
 // import RealtimeChart from '@/components/RealtimeChart'; // 一時的に無効化
 import AlertSystem from '@/components/AlertSystem';
@@ -139,16 +137,6 @@ export default function Home() {
           {/* センサー表示 */}
           <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
             <SensorDisplay />
-          </div>
-
-          {/* モーター表示 */}
-          <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <MotorDisplay />
-          </div>
-
-          {/* 統計情報 */}
-          <div className="lg:col-span-2 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            <StatisticsDisplay />
           </div>
         </div>
 
