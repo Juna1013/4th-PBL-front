@@ -14,13 +14,7 @@ export default function Home() {
       <main className="pt-24 px-6 pb-20">
         {/* ヒーローセクション */}
         <section className="max-w-7xl mx-auto py-20 text-center">
-          <div className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700 text-amber-400 text-sm font-medium">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-            </span>
-            New Ver. 2.0 リリース
-          </div>
+
 
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6">
             次世代の <br />
