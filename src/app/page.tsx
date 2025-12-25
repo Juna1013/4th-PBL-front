@@ -16,7 +16,7 @@ export default function Home() {
           <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-slate-900 mb-6 flex flex-col md:flex-row items-center justify-center gap-6">
 
             <GitHubLogoIcon
-              className="w-24 h-24 text-sky-500 drop-shadow-md"
+              className="w-24 h-24 text-slate-900 drop-shadow-md"
             />
 
             <span className="pb-2">
