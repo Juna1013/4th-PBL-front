@@ -15,9 +15,16 @@ export default function Home() {
 
           <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-slate-900 mb-6 flex flex-col md:flex-row items-center justify-center gap-6">
 
-            <GitHubLogoIcon
-              className="w-24 h-24 text-slate-900 drop-shadow-md"
-            />
+            <a
+              href="https://github.com/Juna1013/4th-PBL-front"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:scale-105 transition-transform duration-300"
+            >
+              <GitHubLogoIcon
+                className="w-24 h-24 text-slate-900 drop-shadow-md hover:text-slate-700 transition-colors"
+              />
+            </a>
 
             <span className="pb-2">
               <span className="text-slate-900">Endra</span> <span className="text-sky-500">Hub</span>
