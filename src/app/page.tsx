@@ -15,20 +15,21 @@ export default function Home() {
 
           <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-slate-900 mb-6 flex flex-col md:flex-row items-center justify-center gap-6">
 
-            {/* SVGグラデーション定義 */}
-            <svg width="0" height="0" className="absolute w-0 h-0 overflow-hidden" aria-hidden="true">
+            {/* GitHub Octocat Icon with Gradient */}
+            <svg viewBox="0 0 15 15" className="w-24 h-24" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <linearGradient id="cat-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#38bdf8" />
                   <stop offset="100%" stopColor="#2563eb" />
                 </linearGradient>
               </defs>
+              <path
+                d="M7.5 0C3.358 0 0 3.358 0 7.5c0 3.314 2.15 6.126 5.126 7.116.375.069.512-.163.512-.362 0-.178-.006-.65-.01-1.192-1.897.356-2.414-.506-2.534-1.013-.069-.172-.357-.7-.61-.841-.212-.116-.513-.4-.005-.407.475-.006.812.438.925.619.538.919 1.414.656 1.76.5.056-.39.21-.656.381-.806-1.514-.172-3.106-.757-3.106-3.371 0-.744.266-1.35.7-1.825-.069-.172-.303-.863.066-1.8 0 0 .572-.181 1.875.7.544-.15 1.128-.225 1.709-.228.581.003 1.166.078 1.709.228 1.303-.884 1.875-.7 1.875-.7.372.938.138 1.628.069 1.8.438.475.7 1.081.7 1.825 0 2.622-1.597 3.197-3.116 3.366.216.184.409.553.409 1.116 0 .806-.006 1.456-.006 1.653 0 .2.134.434.516.363A7.502 7.502 0 0 0 15 7.5C15 3.358 11.642 0 7.5 0Z"
+                fill="url(#cat-gradient)"
+                fillRule="evenodd"
+                clipRule="evenodd"
+              />
             </svg>
-
-            <GitHubLogoIcon
-              className="w-24 h-24"
-              style={{ fill: 'url(#icon-gradient)' }}
-            />
 
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 pb-2">
               Endra Hub
