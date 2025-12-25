@@ -32,8 +32,7 @@ export default function Home() {
           </h1>
 
           <p className="max-w-2xl mx-auto text-lg text-slate-500 mb-0 leading-relaxed">
-            リアルタイムテレメトリ、高度なセンサー可視化、そして詳細なログ分析。<br />
-            教育と研究のために設計された、完全なデジタルツインプラットフォーム。
+            Wifi通信を用いたデジタルツインの実装およびデータセット作成のサポート
           </p>
 
         </section>
