@@ -19,8 +19,8 @@ export default function Home() {
               className="w-24 h-24 text-sky-500 drop-shadow-md"
             />
 
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 pb-2">
-              Endra Hub
+            <span className="pb-2">
+              <span className="text-slate-900">Endra</span> <span className="text-sky-500">Hub</span>
             </span>
           </h1>
 
