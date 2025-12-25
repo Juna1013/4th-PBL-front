@@ -5,10 +5,7 @@ import Navigation from '@/components/Navigation';
 
 export default function Home() {
   return (
-    <div className="min-h-screen text-slate-200 font-sans" style={{
-      background: 'radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%)',
-      fontFamily: "'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif",
-    }}>
+    <div className="min-h-screen">
       <Navigation />
 
       <main className="pt-24 px-6 pb-20">

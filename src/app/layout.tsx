@@ -26,7 +26,12 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased text-slate-200`}
+        style={{
+          background: 'radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%)',
+          fontFamily: "'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif",
+          minHeight: '100vh',
+        }}
       >
         {children}
         <Footer />
