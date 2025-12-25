@@ -97,19 +97,7 @@ export default function Dashboard() {
                             <p className="text-slate-400 text-xs tracking-wider uppercase">リアルタイム・ライントレース解析システム</p>
                         </div>
 
-                        <div className="flex gap-4">
-                            <div className="flex flex-col items-end">
-                                <span className="text-xs text-slate-500 uppercase tracking-wider font-bold">システム状態</span>
-                                <div className="flex items-center gap-2 text-emerald-400 font-medium bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.5)]"></div>
-                                    <span className="text-sm">稼働中</span>
-                                </div>
-                            </div>
-                            <div className="flex flex-col items-end">
-                                <span className="text-xs text-slate-500 uppercase tracking-wider font-bold">受信データ数</span>
-                                <span className="text-lg font-mono text-white tabular-nums">{dataCount.toLocaleString()}</span>
-                            </div>
-                        </div>
+
                     </header>
 
                     {/* メインカード */}
