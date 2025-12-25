@@ -154,7 +154,7 @@ export default function Dashboard() {
                                                 <span className={`
                           text-[10px] uppercase font-bold tracking-wider transition-colors duration-300
                           ${value === 0 ? 'text-sky-600' : 'text-slate-400'}
-                        `}>CH.{index}</span>
+                        `}>CH.{index + 1}</span>
                                             </div>
                                         ))}
                                     </div>
