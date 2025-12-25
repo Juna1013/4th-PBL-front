@@ -91,8 +91,8 @@ export default function Dashboard() {
                     {/* ヘッダー */}
                     <header className="flex flex-col items-center mb-10 gap-6 text-center">
                         <div>
-                            <h1 className="text-3xl font-bold tracking-tight text-sky-500 mb-2">
-                                Dashboard
+                            <h1 className="text-3xl font-bold tracking-tight mb-2">
+                                <span className="text-slate-800">Endra</span> <span className="text-sky-500">Hub</span>
                             </h1>
                             <p className="text-slate-500 text-xs tracking-wider uppercase">リアルタイム・ライントレース解析システム</p>
                         </div>
