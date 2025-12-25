@@ -11,6 +11,7 @@ export default function Dashboard() {
     const [uptime, setUptime] = useState(0);
     const [logs, setLogs] = useState<string[]>([]);
     const logContainerRef = useRef<HTMLDivElement>(null);
+    const lastLogTimeRef = useRef<number>(Date.now());
 
     // 稼働時間を更新
     useEffect(() => {
@@ -30,22 +31,44 @@ export default function Dashboard() {
   "timestamp": ${t}
 }`;
 
-    // ログの更新
+    // サンプルデータ生成（ランダムなセンサー値）
+    const generateSampleSensors = () => {
+        // 基本は白(1)で、ランダムに黒(0)を混ぜる
+        return Array(8).fill(0).map(() => Math.random() > 0.8 ? 0 : 1);
+    };
+
+    // ログ追加のヘルパー関数
+    const addLogEntry = (sensorData: number[], timestamp: number) => {
+        const logEntry = formatData(sensorData, timestamp);
+        setLogs(prev => {
+            const newLogs = [...prev, logEntry];
+            if (newLogs.length > 50) {
+                return newLogs.slice(newLogs.length - 50);
+            }
+            return newLogs;
+        });
+        lastLogTimeRef.current = Date.now();
+    };
+
+    // 1. データ受信時のログ更新
     useEffect(() => {
         if (data) {
-            const timestamp = data.timestamp || Date.now();
-            const logEntry = formatData(sensors, timestamp);
-
-            setLogs(prev => {
-                // 新しいログを追加し、最新50件のみ保持
-                const newLogs = [...prev, logEntry];
-                if (newLogs.length > 50) {
-                    return newLogs.slice(newLogs.length - 50);
-                }
-                return newLogs;
-            });
+            addLogEntry(sensors, data.timestamp || Date.now());
         }
-    }, [data, sensors]); // dataまたはsensorsが更新されたら実行
+    }, [data, sensors]);
+
+    // 2. 通信断時のサンプルデータ自動生成 (Keep Alive)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            // 2秒以上更新がなければサンプルデータを流す
+            if (Date.now() - lastLogTimeRef.current > 2000) {
+                const sampleSensors = generateSampleSensors();
+                addLogEntry(sampleSensors, Date.now());
+            }
+        }, 500); // 0.5秒間隔でチェック・生成
+
+        return () => clearInterval(interval);
+    }, []);
 
     // 自動スクロール
     useEffect(() => {
