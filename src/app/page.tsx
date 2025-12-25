@@ -52,20 +52,6 @@ export default function Home() {
 
         {/* ナビゲーショングリッド */}
         <section className="max-w-7xl mx-auto py-20 grid md:grid-cols-3 gap-8">
-          <Link href="/dashboard" className="block p-8 rounded-3xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm hover:border-amber-500/50 hover:bg-slate-800/80 transition-all group relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform relative z-10">
-              <span className="text-2xl">📊</span>
-            </div>
-            <h3 className="text-xl font-bold text-white mb-3 relative z-10 flex items-center gap-2">
-              ダッシュボードへ飛ぶ
-              <svg className="w-4 h-4 text-amber-500 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-            </h3>
-            <p className="text-slate-400 leading-relaxed relative z-10">
-              リアルタイムのセンサーデータを確認し、ライントレースカーの状態を監視します。
-            </p>
-          </Link>
-
           <Link href="/features" className="block p-8 rounded-3xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm hover:border-blue-500/50 hover:bg-slate-800/80 transition-all group relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform relative z-10">
@@ -77,6 +63,20 @@ export default function Home() {
             </h3>
             <p className="text-slate-400 leading-relaxed relative z-10">
               物理的なライントレースカーをデジタル空間で再現する仕組みとその機能を紹介します。
+            </p>
+          </Link>
+
+          <Link href="/dashboard" className="block p-8 rounded-3xl bg-slate-800/50 border border-slate-700/50 backdrop-blur-sm hover:border-amber-500/50 hover:bg-slate-800/80 transition-all group relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform relative z-10">
+              <span className="text-2xl">📊</span>
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3 relative z-10 flex items-center gap-2">
+              ダッシュボードへ飛ぶ
+              <svg className="w-4 h-4 text-amber-500 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+            </h3>
+            <p className="text-slate-400 leading-relaxed relative z-10">
+              リアルタイムのセンサーデータを確認し、ライントレースカーの状態を監視します。
             </p>
           </Link>
 
