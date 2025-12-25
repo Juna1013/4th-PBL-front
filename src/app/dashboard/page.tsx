@@ -22,10 +22,9 @@ export default function Dashboard() {
     }, [startTime]);
 
     const sensors = data?.sensors || data?.sensor_values || Array(8).fill(1);
-    const blackCount = data?.black_detected || sensors.filter((v) => v === 0).length;
     const sensorBinary = data?.sensor_binary || sensors.join('');
 
-    // JSON整形関数
+    // サンプルデータ生成（ランダムなセンサー値）
     const formatData = (s: number[], t: number) => `{
   "sensors": [${s.join(', ')}],
   "timestamp": ${t}
@@ -164,18 +163,8 @@ export default function Dashboard() {
                                 </div>
 
                                 {/* データメトリクス */}
-                                <div className="grid grid-cols-2 gap-6">
-                                    <div className="p-5 flex items-center justify-between border-b border-r border-slate-800/50 rounded-br-2xl">
-                                        <div>
-                                            <span className="text-xs text-slate-400 uppercase tracking-widest block mb-1 font-bold">検出ライン数</span>
-                                            <span className="text-3xl font-light text-white">{blackCount}</span>
-                                        </div>
-                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${blackCount > 0 ? 'bg-amber-400/20 text-amber-400' : 'bg-slate-800 text-slate-600'}`}>
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                                        </div>
-                                    </div>
-
-                                    <div className="p-5 flex items-center justify-between border-b border-l border-slate-800/50 rounded-bl-2xl">
+                                <div className="flex justify-center mt-6">
+                                    <div className="flex items-center gap-6 p-5 rounded-2xl bg-slate-900/50 border border-slate-700/50">
                                         <div>
                                             <span className="text-xs text-slate-400 uppercase tracking-widest block mb-1 font-bold">バイナリパターン</span>
                                             <span className="text-3xl font-light text-white font-mono tracking-widest">{sensorBinary}</span>
