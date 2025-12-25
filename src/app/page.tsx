@@ -28,20 +28,7 @@ export default function Home() {
             教育と研究のために設計された、完全なデジタルツインプラットフォーム。
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/dashboard"
-              className="px-8 py-4 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(245,158,11,0.3)]"
-            >
-              ダッシュボードを開く
-            </Link>
-            <Link
-              href="/about"
-              className="px-8 py-4 rounded-full bg-slate-800 hover:bg-slate-700 text-white font-medium border border-slate-700 transition-all"
-            >
-              システム解説を見る
-            </Link>
-          </div>
+
         </section>
 
         {/* ナビゲーショングリッド */}
