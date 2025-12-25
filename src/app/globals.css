@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
-  --foreground: #18181b;
+  --background: #f8fafc;
+  --foreground: #334155;
   --card-bg: #ffffff;
-  --accent: #6366f1;
-  --accent-hover: #4f46e5;
+  --accent: #0ea5e9;
+  /* sky-500 */
+  --accent-hover: #0284c7;
+  /* sky-600 */
 }
 
 @theme inline {
@@ -13,16 +15,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #27272a;
-    --foreground: #fafafa;
-    --card-bg: #18181b;
-    --accent: #818cf8;
-    --accent-hover: #a5b4fc;
-  }
 }
 
 body {
@@ -79,20 +71,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #a1a1aa;
+  background: #cbd5e1;
+  /* slate-300 */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #71717a;
-}
-
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-thumb {
-    background: #52525b;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #71717a;
-  }
+  background: #94a3b8;
+  /* slate-400 */
 }

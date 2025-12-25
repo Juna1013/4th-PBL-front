@@ -15,13 +15,13 @@ export default function About() {
                 <div className="max-w-4xl mx-auto">
                     {/* 記事ヘッダー */}
                     <div className="text-center mb-6 space-y-4">
-                        <div className="inline-block px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs text-slate-400 mb-2">
+                        <div className="inline-block px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-xs text-sky-600 mb-2 font-medium">
                             {meta.date}
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+                        <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
                             {meta.title}
                         </h1>
-                        <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+                        <p className="text-xl text-slate-500 max-w-2xl mx-auto">
                             {meta.description}
                         </p>
                     </div>

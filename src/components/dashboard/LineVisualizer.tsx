@@ -142,10 +142,10 @@ export default function LineVisualizer({ sensors, error }: LineVisualizerProps) 
             // A-3. 現在地が中心に来るようにコース全体を逆移動
             ctx.translate(-pathPos.x, -pathPos.y);
 
-            // A-4. コース描画（ネオン風）
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = 'rgba(59, 130, 246, 0.4)'; // blue-500
-            ctx.strokeStyle = '#3b82f6';
+            // A-4. コース描画（ネオン風 -> クリーンなライン）
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = 'rgba(14, 165, 233, 0.3)'; // sky-500
+            ctx.strokeStyle = '#0ea5e9'; // sky-500
             ctx.lineWidth = 6;
             ctx.lineJoin = 'round';
 
@@ -155,7 +155,7 @@ export default function LineVisualizer({ sensors, error }: LineVisualizerProps) 
 
             // スタートライン
             ctx.shadowBlur = 0;
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.strokeStyle = 'rgba(51, 65, 85, 0.2)'; // slate-700
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.moveTo(centerX, centerY + size / 2 - 15);
@@ -192,9 +192,9 @@ export default function LineVisualizer({ sensors, error }: LineVisualizerProps) 
             ctx.rotate(-Math.PI / 2);
 
             // 車体ビジュアル
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = '#fbbf24'; // amber-400
-            ctx.fillStyle = '#fbbf24';
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = 'rgba(245, 158, 11, 0.4)'; // amber-500
+            ctx.fillStyle = '#f59e0b'; // amber-500
 
             // 未来的な戦闘機風の三角形
             ctx.beginPath();
@@ -212,7 +212,7 @@ export default function LineVisualizer({ sensors, error }: LineVisualizerProps) 
 
                 if (val === 0) { // 検知中
                     ctx.beginPath();
-                    ctx.fillStyle = '#ef4444'; // 検知時は赤
+                    ctx.fillStyle = '#0ea5e9'; // 検知時は水色
                     ctx.arc(sx, sy, 1.5, 0, Math.PI * 2);
                     ctx.fill();
                 }
@@ -235,7 +235,7 @@ export default function LineVisualizer({ sensors, error }: LineVisualizerProps) 
             ref={canvasRef}
             width={400}
             height={250}
-            className="w-full h-64 bg-slate-900 rounded-xl border border-slate-700"
+            className="w-full h-64 bg-slate-50 rounded-xl border border-slate-200 shadow-inner"
         />
     );
 }
