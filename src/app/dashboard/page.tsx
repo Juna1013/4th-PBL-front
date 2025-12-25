@@ -112,7 +112,10 @@ export default function Dashboard() {
                                 </div>
                             </div>
                             <div className="flex justify-center py-4">
-                                <LineVisualizer sensors={sensors} />
+                                <LineVisualizer
+                                    sensors={sensors}
+                                    error={data?.control?.error}
+                                />
                             </div>
                         </section>
 

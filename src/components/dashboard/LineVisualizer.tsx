@@ -4,18 +4,21 @@ import { useEffect, useRef } from 'react';
 
 interface LineVisualizerProps {
     sensors: number[];
+    error?: number;
 }
 
-export default function LineVisualizer({ sensors }: LineVisualizerProps) {
+export default function LineVisualizer({ sensors, error }: LineVisualizerProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const sensorsRef = useRef<number[]>(sensors);
+    const errorRef = useRef<number | undefined>(error);
     const progressRef = useRef(0);
     const animationRef = useRef<number>(0);
 
-    // センサーデータをRefに同期（アニメーションループから参照するため）
+    // データをRefに同期
     useEffect(() => {
         sensorsRef.current = sensors;
-    }, [sensors]);
+        errorRef.current = error;
+    }, [sensors, error]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -23,172 +26,102 @@ export default function LineVisualizer({ sensors }: LineVisualizerProps) {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // コース設定
+        // ... (コース設定部分は変更なし、省略可能だが安全のためそのまま維持する形で実装) ...
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
-        const size = 160; // 正方形の一辺のサイズ
-        const radius = 40; // 角の丸み半径
+        const size = 160;
+        const radius = 40;
 
-        // パスに沿った座標を取得する関数 (0.0 - 1.0)
+        // パス取得関数（変更なし）
         const getPositionOnPath = (t: number) => {
-            // 全周の長さ概算
-            const straightLen = (size - 2 * radius); // 直線部分の長さ
-            const arcLen = (2 * Math.PI * radius) / 4; // コーナー(1/4円)の長さ
+            const straightLen = (size - 2 * radius);
+            const arcLen = (2 * Math.PI * radius) / 4;
             const totalLen = (straightLen + arcLen) * 4;
-
             const currentDist = t * totalLen;
-
-            // 各セクションの境界距離
-            const sectionLen = straightLen + arcLen;
-
-            // どの辺にいるか (0:下, 1:右, 2:上, 3:左) ※時計回りの場合
-            // ここでは反時計回り(右→上→左→下)で実装
-            // Start: 下辺の中央から右へ
-
-            // 簡易実装: 正方形のパラメータ形式
-            // t(0-1) を角度ではなく距離でマッピングするのは複雑なので、
-            // 簡易的に角丸正方形を描画しながら、そのパス上の点を取得するロジックにする
-
-            // もっと単純に、角丸正方形の軌跡を計算する
-            // 4つの直線と4つの円弧
-            // 0: 下辺右半分 (straightLen/2)
-            // 1: 右下コーナー (arcLen)
-            // 2: 右辺 (straightLen)
-            // 3: 右上コーナー (arcLen)
-            // 4: 上辺 (straightLen)
-            // 5: 左上コーナー (arcLen)
-            // 6: 左辺 (straightLen)
-            // 7: 左下コーナー (arcLen)
-            // 8: 下辺左半分 (straightLen/2)
-
-            // ここではさらに単純化して、状態遷移で座標を計算
+            const halfStraight = straightLen / 2;
             let d = currentDist;
 
-            const halfStraight = straightLen / 2;
-
             // 下辺中央(Start) -> 右
-            if (d < halfStraight) {
-                return {
-                    x: centerX + d,
-                    y: centerY + size / 2,
-                    angle: 0
-                };
-            }
+            if (d < halfStraight) return { x: centerX + d, y: centerY + size / 2, angle: 0 };
             d -= halfStraight;
-
-            // 右下コーナー
+            // 右下
             if (d < arcLen) {
                 const angle = d / arcLen * (Math.PI / 2);
-                return {
-                    x: centerX + halfStraight + Math.sin(angle) * radius,
-                    y: centerY + size / 2 - (radius - Math.cos(angle) * radius),
-                    angle: -angle  // 進行方向
-                };
+                return { x: centerX + halfStraight + Math.sin(angle) * radius, y: centerY + size / 2 - (radius - Math.cos(angle) * radius), angle: -angle };
             }
             d -= arcLen;
-
-            // 右辺 (下から上へ)
-            if (d < straightLen) {
-                return {
-                    x: centerX + size / 2,
-                    y: centerY + size / 2 - radius - d,
-                    angle: -Math.PI / 2
-                };
-            }
+            // 右辺
+            if (d < straightLen) return { x: centerX + size / 2, y: centerY + size / 2 - radius - d, angle: -Math.PI / 2 };
             d -= straightLen;
-
-            // 右上コーナー
+            // 右上
             if (d < arcLen) {
                 const angle = d / arcLen * (Math.PI / 2);
-                return {
-                    x: centerX + size / 2 - (radius - Math.cos(angle) * radius),
-                    y: centerY - size / 2 + radius - Math.sin(angle) * radius,
-                    angle: -Math.PI / 2 - angle
-                };
+                return { x: centerX + size / 2 - (radius - Math.cos(angle) * radius), y: centerY - size / 2 + radius - Math.sin(angle) * radius, angle: -Math.PI / 2 - angle };
             }
             d -= arcLen;
-
-            // 上辺 (右から左へ)
-            if (d < straightLen) {
-                return {
-                    x: centerX + size / 2 - radius - d,
-                    y: centerY - size / 2,
-                    angle: -Math.PI
-                };
-            }
+            // 上辺
+            if (d < straightLen) return { x: centerX + size / 2 - radius - d, y: centerY - size / 2, angle: -Math.PI };
             d -= straightLen;
-
-            // 左上コーナー
+            // 左上
             if (d < arcLen) {
                 const angle = d / arcLen * (Math.PI / 2);
-                return {
-                    x: centerX - size / 2 + (radius - Math.cos(angle) * radius),
-                    y: centerY - size / 2 + radius - Math.sin(angle) * radius,
-                    angle: -Math.PI - angle
-                };
+                return { x: centerX - size / 2 + (radius - Math.cos(angle) * radius), y: centerY - size / 2 + radius - Math.sin(angle) * radius, angle: -Math.PI - angle };
             }
             d -= arcLen;
-
-            // 左辺 (上から下へ)
-            if (d < straightLen) {
-                return {
-                    x: centerX - size / 2,
-                    y: centerY - size / 2 + radius + d,
-                    angle: -Math.PI * 1.5
-                };
-            }
+            // 左辺
+            if (d < straightLen) return { x: centerX - size / 2, y: centerY - size / 2 + radius + d, angle: -Math.PI * 1.5 };
             d -= straightLen;
-
-            // 左下コーナー
+            // 左下
             if (d < arcLen) {
                 const angle = d / arcLen * (Math.PI / 2);
-                return {
-                    x: centerX - size / 2 + radius - Math.sin(angle) * radius,
-                    y: centerY + size / 2 - (radius - Math.cos(angle) * radius),
-                    angle: -Math.PI * 1.5 - angle
-                };
+                return { x: centerX - size / 2 + radius - Math.sin(angle) * radius, y: centerY + size / 2 - (radius - Math.cos(angle) * radius), angle: -Math.PI * 1.5 - angle };
             }
             d -= arcLen;
-
-            // 下辺左半分 (左から中央へ)
-            return {
-                x: centerX - size / 2 + radius + d,
-                y: centerY + size / 2,
-                angle: 0
-            };
+            // 下辺左
+            return { x: centerX - size / 2 + radius + d, y: centerY + size / 2, angle: 0 };
         };
 
-
         const render = () => {
-            // 1. キャンバスリセット
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 2. 自機位置とセンサー偏差の計算
-            // 進捗を進める (ゆっくり周回)
+            // 進捗
             progressRef.current = (progressRef.current + 0.0005) % 1;
-
-            // コース上の理想的な位置と向きを取得
             const pathPos = getPositionOnPath(progressRef.current);
 
-            // センサー偏差の計算
-            const currentSensors = sensorsRef.current;
-            let activeCount = 0;
-            let weightedSum = 0;
-            currentSensors.forEach((v, i) => {
-                if (v === 0) { // 黒検知
-                    activeCount++;
-                    weightedSum += i;
-                }
-            });
+            // 偏差計算 (ファームウェアロジック準拠)
+            let errorValue = errorRef.current;
 
-            // 左右のズレ (-1.0 ~ 1.0 程度)
-            // 3.5が中心。centerIdx < 3.5 (左センサー反応) -> 車体は右にあるべき -> しかし画面上では左にラインが見える
-            // ヘディングアップ視点では、車体の左右移動として表現する
-            let deviation = 0;
-            if (activeCount > 0) {
-                const centerIdx = weightedSum / activeCount;
-                deviation = (centerIdx - 3.5) * 8; // 係数調整
+            if (errorValue === undefined) {
+                // ファームウェアからのerrorがない場合、同じロジックで計算
+                const currentSensors = sensorsRef.current;
+                const weights = [-7, -5, -3, -1, 1, 3, 5, 7];
+                let weightedSum = 0;
+                let activeCount = 0;
+
+                currentSensors.forEach((v, i) => {
+                    if (v === 0) { // 黒検知
+                        weightedSum += weights[i];
+                        activeCount++;
+                    }
+                });
+
+                if (activeCount > 0) {
+                    // ファームウェア: return -(weighted_sum / detected_count)
+                    // 左(-7)検知 -> weightedSum = -7 -> result = 7 (正)
+                    // 右(7)検知 -> weightedSum = 7 -> result = -7 (負)
+                    errorValue = -(weightedSum / activeCount);
+                } else {
+                    errorValue = 0;
+                }
             }
+
+            // 描画用の偏差量に変換
+            // errorValue: 正=左寄り(左センサー反応), 負=右寄り(右センサー反応)
+            // 描画上: deviationが正なら右へ移動、負なら左へ移動
+            // Errorが正(7) = 左センサー反応 = 車体はラインの右にいるべき = 描画上の車体位置は右(+X)
+            // なので deviation = errorValue * scale で良さそう
+            const deviation = (errorValue || 0) * 4; // スケール調整 (7 * 4 = 28px)
+
 
             // --- 描画パイプライン ---
 
@@ -273,7 +206,7 @@ export default function LineVisualizer({ sensors }: LineVisualizerProps) {
             ctx.fill();
 
             // センサー状態のインジケーター（車体前方に展開）
-            currentSensors.forEach((val, i) => {
+            sensorsRef.current.forEach((val, i) => {
                 const sx = 8; // 前後位置
                 const sy = -10 + (i * 3); // 左右幅
 
