@@ -16,6 +16,26 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Endra Hub | ライントレースカー デジタルツイン",
   description: "Endra Hubは、ライントレースカーのセンサー情報をリアルタイムで可視化・解析するデジタルツインプラットフォームです。",
+  openGraph: {
+    title: "Endra Hub | ライントレースカー デジタルツイン",
+    description: "Endra Hubは、ライントレースカーのセンサー情報をリアルタイムで可視化・解析するデジタルツインプラットフォームです。",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Endra Hub Dashboard",
+      },
+    ],
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Endra Hub | ライントレースカー デジタルツイン",
+    description: "ライントレースカーのセンサー情報をリアルタイムで可視化・解析するデジタルツインプラットフォーム",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
