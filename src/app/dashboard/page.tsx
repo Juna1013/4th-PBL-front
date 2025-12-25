@@ -99,7 +99,7 @@ export default function Dashboard() {
                     </header>
 
                     {/* メイングリッド */}
-                    <div className="grid gap-16">
+                    <div className="grid gap-8 lg:grid-cols-2">
 
                         {/* デジタルツイン可視化 */}
                         <section>
@@ -177,7 +177,7 @@ export default function Dashboard() {
                         </section>
 
                         {/* 強化学習用データセット出力 */}
-                        <section>
+                        <section className="lg:col-span-2">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-2">
                                     <h3 className="text-slate-700 font-medium">Reinforcement Learning Set</h3>
