@@ -103,14 +103,10 @@ export default function Dashboard() {
 
                         {/* デジタルツイン可視化 */}
                         <section>
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="p-2 bg-sky-100/50 rounded-lg text-xl flex items-center justify-center">
-                                    <RocketIcon className="w-6 h-6 text-sky-600" />
-                                </div>
-                                <div>
-                                    <h2 className="text-xl font-semibold text-slate-800">Digital Twin Monitor</h2>
-                                    <p className="text-xs text-slate-500">Real-time 2D Visualization</p>
-                                </div>
+                            <div className="flex items-center gap-2 mb-6 border-b border-slate-200 pb-2">
+                                <RocketIcon className="w-5 h-5 text-sky-500" />
+                                <h2 className="text-lg font-semibold text-slate-800">Digital Twin Monitor</h2>
+                                <span className="text-xs text-slate-400 ml-auto md:ml-2 font-mono">Real-time 2D Visualization</span>
                             </div>
                             <div className="flex justify-center py-4">
                                 <LineVisualizer
@@ -122,19 +118,15 @@ export default function Dashboard() {
 
                         {/* センサーアレイ */}
                         <section>
-                            <div className="flex justify-between items-center mb-6">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-blue-100/50 rounded-lg text-xl flex items-center justify-center">
-                                        <TargetIcon className="w-6 h-6 text-blue-600" />
-                                    </div>
-                                    <div>
-                                        <h2 className="text-xl font-semibold text-slate-800">センサーアレイ</h2>
-                                        <p className="text-xs text-slate-500">8チャンネル 光学ライン検出</p>
-                                    </div>
+                            <div className="flex items-center justify-between gap-2 mb-6 border-b border-slate-200 pb-2">
+                                <div className="flex items-center gap-2">
+                                    <TargetIcon className="w-5 h-5 text-blue-500" />
+                                    <h2 className="text-lg font-semibold text-slate-800">センサーアレイ</h2>
+                                    <span className="hidden md:inline text-xs text-slate-400 font-mono">8-Channel Optical Line Detection</span>
                                 </div>
-                                <div className="text-right">
-                                    <span className="text-xs text-slate-500 block font-bold">最終更新</span>
-                                    <span className="text-sm font-mono text-sky-600">{new Date().toLocaleTimeString('ja-JP')}</span>
+                                <div className="flex items-center gap-2 text-xs">
+                                    <span className="text-slate-400 font-bold">LATEST:</span>
+                                    <span className="font-mono text-sky-600">{new Date().toLocaleTimeString('ja-JP')}</span>
                                 </div>
                             </div>
 
