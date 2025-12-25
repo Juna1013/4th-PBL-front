@@ -100,36 +100,30 @@ export default function Dashboard() {
 
                     </header>
 
-                    {/* メインカード */}
-                    <div className="grid gap-6">
+                    {/* メイングリッド */}
+                    <div className="grid gap-16">
+
                         {/* デジタルツイン可視化 */}
-                        <div className="relative overflow-hidden rounded-3xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-xl shadow-2xl">
-                            <div className="px-8 py-6 border-b border-slate-700/50 flex justify-between items-center bg-gradient-to-r from-slate-800/50 to-transparent">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-blue-400/10 rounded-lg">
-                                        <span className="text-xl">🏎️</span>
-                                    </div>
-                                    <div>
-                                        <h2 className="text-lg font-semibold text-white">Digital Twin Monitor</h2>
-                                        <p className="text-xs text-slate-400">Real-time 2D Visualization</p>
-                                    </div>
+                        <section>
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="p-2 bg-blue-400/10 rounded-lg text-xl">🏎️</div>
+                                <div>
+                                    <h2 className="text-xl font-semibold text-white">Digital Twin Monitor</h2>
+                                    <p className="text-xs text-slate-400">Real-time 2D Visualization</p>
                                 </div>
                             </div>
-                            <div className="p-8 flex justify-center">
+                            <div className="flex justify-center py-4">
                                 <LineVisualizer sensors={sensors} />
                             </div>
-                        </div>
+                        </section>
 
-                        {/* センサーカード */}
-                        <div className="relative overflow-hidden rounded-3xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-xl shadow-2xl">
-                            {/* カードヘッダー */}
-                            <div className="px-8 py-6 border-b border-slate-700/50 flex justify-between items-center bg-gradient-to-r from-slate-800/50 to-transparent">
+                        {/* センサーアレイ */}
+                        <section>
+                            <div className="flex justify-between items-center mb-6">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-amber-400/10 rounded-lg">
-                                        <span className="text-xl">📍</span>
-                                    </div>
+                                    <div className="p-2 bg-amber-400/10 rounded-lg text-xl">📍</div>
                                     <div>
-                                        <h2 className="text-lg font-semibold text-white">センサーアレイ</h2>
+                                        <h2 className="text-xl font-semibold text-white">センサーアレイ</h2>
                                         <p className="text-xs text-slate-400">8チャンネル 光学ライン検出</p>
                                     </div>
                                 </div>
@@ -139,10 +133,10 @@ export default function Dashboard() {
                                 </div>
                             </div>
 
-                            <div className="p-8">
+                            <div className="space-y-8">
                                 {/* センサー可視化 */}
-                                <div className="flex justify-center mb-12">
-                                    <div className="flex gap-3 md:gap-4 p-6 rounded-2xl bg-[#0a0f1c] border border-slate-800 shadow-inner inline-flex">
+                                <div className="flex justify-center">
+                                    <div className="flex gap-3 md:gap-4 p-6 rounded-2xl bg-[#0a0f1c]/50 border border-slate-800/50 inline-flex">
                                         {sensors.map((value, index) => (
                                             <div key={index} className="flex flex-col items-center gap-3 group">
                                                 <div className="relative">
@@ -171,7 +165,7 @@ export default function Dashboard() {
 
                                 {/* データメトリクス */}
                                 <div className="grid grid-cols-2 gap-6">
-                                    <div className="p-5 rounded-2xl bg-slate-900/50 border border-slate-700/50 flex items-center justify-between group hover:border-amber-500/30 transition-colors">
+                                    <div className="p-5 flex items-center justify-between border-b border-r border-slate-800/50 rounded-br-2xl">
                                         <div>
                                             <span className="text-xs text-slate-400 uppercase tracking-widest block mb-1 font-bold">検出ライン数</span>
                                             <span className="text-3xl font-light text-white">{blackCount}</span>
@@ -181,7 +175,7 @@ export default function Dashboard() {
                                         </div>
                                     </div>
 
-                                    <div className="p-5 rounded-2xl bg-slate-900/50 border border-slate-700/50 flex items-center justify-between group hover:border-amber-500/30 transition-colors">
+                                    <div className="p-5 flex items-center justify-between border-b border-l border-slate-800/50 rounded-bl-2xl">
                                         <div>
                                             <span className="text-xs text-slate-400 uppercase tracking-widest block mb-1 font-bold">バイナリパターン</span>
                                             <span className="text-3xl font-light text-white font-mono tracking-widest">{sensorBinary}</span>
@@ -192,49 +186,45 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent opacity-50"></div>
-                        </div>
+                        </section>
 
                         {/* 強化学習用データセット出力 */}
-                        <div className="relative overflow-hidden rounded-3xl border border-slate-700/50 bg-slate-800/40 backdrop-blur-xl shadow-2xl">
-                            <div className="bg-slate-900/50 backdrop-blur-sm p-6 rounded-3xl border border-slate-700/50">
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-2">
-                                        <h3 className="text-slate-200 font-medium">Reinforcement Learning Set</h3>
-                                        <div className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                                            LIVE LOG
-                                        </div>
+                        <section>
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-2">
+                                    <h3 className="text-slate-200 font-medium">Reinforcement Learning Set</h3>
+                                    <div className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                        LIVE LOG
                                     </div>
-                                    <button
-                                        onClick={() => {
-                                            const text = logs.join('\n');
-                                            navigator.clipboard.writeText(text);
-                                        }}
-                                        className="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded-full transition-colors flex items-center gap-1"
-                                    >
-                                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
-                                        Copy All
-                                    </button>
                                 </div>
-                                <div className="p-0">
-                                    <div
-                                        ref={logContainerRef}
-                                        className="bg-[#0a0f1c] p-4 rounded-xl border border-slate-800 h-64 overflow-y-auto font-mono text-xs md:text-sm text-emerald-400 scroll-smooth"
-                                    >
-                                        {logs.length === 0 ? (
-                                            <div className="text-slate-600 italic">Waiting for telemetry data...</div>
-                                        ) : (
-                                            logs.map((log, index) => (
-                                                <div key={index} className="mb-2 whitespace-pre shadow-sm border-b border-slate-800/50 pb-2 last:border-0 last:pb-0 last:mb-0">
-                                                    {log}
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
+                                <button
+                                    onClick={() => {
+                                        const text = logs.join('\n');
+                                        navigator.clipboard.writeText(text);
+                                    }}
+                                    className="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded-full transition-colors flex items-center gap-1"
+                                >
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg>
+                                    Copy All
+                                </button>
+                            </div>
+                            <div>
+                                <div
+                                    ref={logContainerRef}
+                                    className="bg-[#0a0f1c]/50 p-4 rounded-xl border border-slate-800/50 h-64 overflow-y-auto font-mono text-xs md:text-sm text-emerald-400 scroll-smooth"
+                                >
+                                    {logs.length === 0 ? (
+                                        <div className="text-slate-600 italic">Waiting for telemetry data...</div>
+                                    ) : (
+                                        logs.map((log, index) => (
+                                            <div key={index} className="mb-2 whitespace-pre shadow-sm border-b border-slate-800/30 pb-2 last:border-0 last:pb-0 last:mb-0">
+                                                {log}
+                                            </div>
+                                        ))
+                                    )}
                                 </div>
                             </div>
-                        </div>
+                        </section>
                     </div>
                 </div>
             </div>
