@@ -31,12 +31,6 @@ export default function Dashboard() {
   "timestamp": ${t}
 }`;
 
-    // サンプルデータ生成（ランダムなセンサー値）
-    const generateSampleSensors = () => {
-        // 基本は白(1)で、ランダムに黒(0)を混ぜる
-        return Array(8).fill(0).map(() => Math.random() > 0.8 ? 0 : 1);
-    };
-
     // ログ追加のヘルパー関数
     const addLogEntry = (sensorData: number[], timestamp: number) => {
         const logEntry = formatData(sensorData, timestamp);
@@ -57,18 +51,7 @@ export default function Dashboard() {
         }
     }, [data, sensors]);
 
-    // 2. 通信断時のサンプルデータ自動生成 (Keep Alive)
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // 2秒以上更新がなければサンプルデータを流す
-            if (Date.now() - lastLogTimeRef.current > 2000) {
-                const sampleSensors = generateSampleSensors();
-                addLogEntry(sampleSensors, Date.now());
-            }
-        }, 500); // 0.5秒間隔でチェック・生成
 
-        return () => clearInterval(interval);
-    }, []);
 
     // 自動スクロール
     useEffect(() => {
