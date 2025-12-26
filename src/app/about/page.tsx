@@ -12,7 +12,11 @@ export default function About() {
             <Navigation />
 
             <main className="pt-24 px-6 pb-20">
-                <div className="max-w-4xl mx-auto">
+                {/* 背景の装飾的な光 */}
+                <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-sky-200/40 rounded-full blur-[100px] pointer-events-none" />
+                <div className="fixed bottom-0 left-0 w-[500px] h-[500px] bg-blue-200/40 rounded-full blur-[100px] pointer-events-none" />
+
+                <div className="max-w-4xl mx-auto relative z-10">
                     {/* 記事ヘッダー */}
                     <div className="text-center mb-6 space-y-4">
                         <div className="inline-block px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-xs text-sky-600 mb-2 font-medium">

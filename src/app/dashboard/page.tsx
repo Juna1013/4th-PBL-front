@@ -163,7 +163,7 @@ export default function Dashboard() {
                         <section className="lg:col-span-2">
                             <div className="flex items-center justify-between mb-4">
                                 <div className="flex items-center gap-2">
-                                    <h3 className="text-slate-700 font-medium">強化学習用データセット</h3>
+                                    <h3 className="text-2xl font-bold text-slate-800">強化学習用データセット</h3>
                                     <div className="px-2 py-0.5 rounded text-[10px] font-bold bg-sky-100 text-sky-600 border border-sky-200">
                                         ライブログ
                                     </div>

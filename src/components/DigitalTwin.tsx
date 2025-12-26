@@ -157,8 +157,8 @@ export default function DigitalTwin() {
             <div className="bg-gray-100 rounded-lg p-4 flex items-center justify-center">
                 <canvas
                     ref={canvasRef}
-                    width={600}
-                    height={400}
+                    width={500}
+                    height={500}
                     className="border border-gray-300 rounded bg-white"
                 />
             </div>

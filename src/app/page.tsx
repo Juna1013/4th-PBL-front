@@ -10,8 +10,12 @@ export default function Home() {
       <Navigation />
 
       <main className="pt-24 px-6 pb-20">
+        {/* 背景の装飾的な光 */}
+        <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-sky-200/40 rounded-full blur-[100px] pointer-events-none" />
+        <div className="fixed bottom-0 left-0 w-[500px] h-[500px] bg-blue-200/40 rounded-full blur-[100px] pointer-events-none" />
+
         {/* ヒーローセクション */}
-        <section className="max-w-7xl mx-auto py-10 text-center">
+        <section className="max-w-7xl mx-auto py-10 text-center relative z-10">
 
           <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-slate-900 mb-6 flex flex-col md:flex-row items-center justify-center gap-6">
 
@@ -38,7 +42,7 @@ export default function Home() {
         </section>
 
         {/* ナビゲーショングリッド */}
-        <section className="max-w-7xl mx-auto py-10 grid md:grid-cols-3 gap-8">
+        <section className="max-w-7xl mx-auto py-10 grid md:grid-cols-3 gap-8 relative z-10">
           <Link href="/features" className="block p-8 rounded-3xl bg-white border border-slate-200 hover:border-sky-400/50 hover:shadow-lg hover:shadow-sky-100 transition-all group relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-sky-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             <div className="w-12 h-12 bg-sky-50 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform relative z-10">
